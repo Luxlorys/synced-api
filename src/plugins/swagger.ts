@@ -1,5 +1,4 @@
 import * as fastifyTypeProviderZod from "fastify-type-provider-zod";
-import * as messageSchema from "@/lib/validation/message/message.schema.js";
 import fp from "fastify-plugin";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -24,9 +23,7 @@ const configureSwagger = async (fastify: FastifyInstance) => {
         // Link: https://github.com/turkerdev/fastify-type-provider-zod?tab=readme-ov-file#how-to-create-refs-to-the-schemas
         transformObject: fastifyTypeProviderZod.createJsonSchemaTransformObject(
             {
-                schemas: {
-                    ...messageSchema,
-                },
+                schemas: {},
             }
         ),
     });
