@@ -6,6 +6,7 @@ import fastifyBasicAuth from "@fastify/basic-auth";
 import { FastifyInstance } from "fastify";
 import { UnauthorizedError } from "@/lib/errors/errors.js";
 import { FastifyPlugin } from "@/lib/fastify/fastify.constant.js";
+import { createUserRepository } from "@/database/repositories/user/user.repository.js";
 
 const basicAuthUsername = "admin";
 
@@ -23,7 +24,9 @@ const configureSwagger = async (fastify: FastifyInstance) => {
         // Link: https://github.com/turkerdev/fastify-type-provider-zod?tab=readme-ov-file#how-to-create-refs-to-the-schemas
         transformObject: fastifyTypeProviderZod.createJsonSchemaTransformObject(
             {
-                schemas: {},
+                schemas: {
+                    ...createUserRepository,
+                },
             }
         ),
     });
