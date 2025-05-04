@@ -15,6 +15,11 @@ import {
 export type AuthService = {
     login: ({ email, password }: LoginUserType) => Promise<UserType>;
     register: ({ email, password, code }: CreateUserType) => Promise<UserType>;
+    updatePassword: (
+        userId: number,
+        oldPassword: string,
+        newPassword: string
+    ) => Promise<object>;
 };
 
 export const createauthService = (
@@ -56,6 +61,41 @@ export const createauthService = (
         });
 
         return createUserResult;
+    },
+    updatePassword: async (
+        id: number,
+        oldPassword: string,
+        newPassword: string
+    ) => {
+        const user = await userRepository.findUniqueOrFail({
+            where: { id },
+        });
+
+        if (!user) {
+            throw new NotFoundError("User not found");
+        }
+
+        const validatePassword = await hashing.comparePassword(
+            oldPassword,
+            user.password
+        );
+
+        if (!validatePassword) {
+            throw new UnauthorizedError("Wrong old password");
+        }
+
+        const newHashedPassword = await hashing.hashPassword(newPassword);
+
+        await userRepository.update({
+            where: {
+                id,
+            },
+            data: {
+                password: newHashedPassword,
+            },
+        });
+
+        return {};
     },
 });
 

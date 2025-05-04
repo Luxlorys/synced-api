@@ -38,3 +38,11 @@ export const loginSchema = z.object({
     }),
     user: userSchema,
 });
+
+export const updatePasswordSchema = z.object({
+    id: z.number(),
+    oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
+    newPassword: z.string().min(MIN_PASSWORD_LENGTH),
+});
+
+export type UpdatePasswordType = z.infer<typeof updatePasswordSchema>;

@@ -5,6 +5,7 @@ import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import {
     CreateUserType,
     LoginUserType,
+    UpdatePasswordType,
 } from "@/lib/validation/auth/auth.schema.js";
 
 export type AuthHandler = {
@@ -17,6 +18,12 @@ export type AuthHandler = {
     register: (
         request: FastifyRequest<{
             Body: CreateUserType;
+        }>,
+        reply: FastifyReply
+    ) => Promise<void>;
+    updatePassword: (
+        request: FastifyRequest<{
+            Body: UpdatePasswordType;
         }>,
         reply: FastifyReply
     ) => Promise<void>;
@@ -59,6 +66,13 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
                 },
                 user: user,
             });
+        },
+        updatePassword: async (request, reply) => {
+            const { id, newPassword, oldPassword } = request.body;
+
+            await authService.updatePassword(id, oldPassword, newPassword);
+
+            reply.status(200).send();
         },
     };
 };
