@@ -37,10 +37,6 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                 },
             });
 
-            if (!user) {
-                throw new NotFoundError("User not found.");
-            }
-
             return user;
         },
     };

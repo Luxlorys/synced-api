@@ -58,18 +58,6 @@ export default [
             "no-negated-condition": "error",
             "no-unneeded-ternary": "error",
 
-            "no-magic-numbers": [
-                "warn",
-                {
-                    ignoreArrayIndexes: true,
-                    ignore: [
-                        0, 1, -1, 200, 201, 204, 400, 401, 403, 404, 409, 500,
-                    ],
-                },
-            ],
-
-            "max-params": ["error", 3],
-
             "id-denylist": ["error", "cb", "item", "i", "el"],
 
             "padding-line-between-statements": [
