@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
+import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { PrismaAwaited } from "@/database/prisma/prisma.type.js";
 import { BaseRepository, generateRepository } from "../generate.repository.js";
@@ -24,7 +25,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
             const user = await prisma.user.findUnique(args);
 
             if (!user) {
-                throw new Error("User not found.");
+                throw new NotFoundError("User not found.");
             }
 
             return user;
@@ -37,7 +38,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
             });
 
             if (!user) {
-                throw new Error("User not found.");
+                throw new NotFoundError("User not found.");
             }
 
             return user;
