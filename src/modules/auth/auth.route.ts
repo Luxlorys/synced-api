@@ -1,14 +1,17 @@
+import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { AuthHandler } from "./auth.handler.js";
 import {
     createUserSchema,
     loginUserSchema,
     loginSchema,
+    updatePasswordSchema,
 } from "@/lib/validation/auth/auth.schema.js";
 
 enum authRoutes {
     LOGIN = "/sign-in",
     SIGN_UP = "/sign-up",
+    UPDATE_PASSWORD = "/update-password",
 }
 
 export const createAuthRoutes = (
@@ -41,5 +44,20 @@ export const createAuthRoutes = (
             },
         },
         authHandler.register
+    );
+
+    fastify.patch(
+        authRoutes.UPDATE_PASSWORD,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Auth"],
+                body: updatePasswordSchema,
+                response: {
+                    200: z.object({}),
+                },
+            },
+        },
+        authHandler.updatePassword
     );
 };

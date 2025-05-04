@@ -16,7 +16,7 @@ declare module "fastify" {
 
     export interface FastifyRequest {
         fastify: FastifyInstance;
-        data: User;
+        user: User;
     }
 }
 
