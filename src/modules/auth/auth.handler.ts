@@ -37,8 +37,10 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
             const user = await authService.login({ email, password });
 
             const { jwt, refreshToken } = createTokens(request.server, {
-                email: user.email,
-                id: user.id,
+                data: {
+                    email: user.email,
+                    id: user.id,
+                },
             });
 
             reply.status(200).send({
@@ -55,8 +57,10 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
             const user = await authService.register({ password, code, email });
 
             const { jwt, refreshToken } = createTokens(request.server, {
-                email: user.email,
-                id: user.id,
+                data: {
+                    email: user.email,
+                    id: user.id,
+                },
             });
 
             reply.status(200).send({
@@ -68,7 +72,11 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
             });
         },
         updatePassword: async (request, reply) => {
-            const { id, newPassword, oldPassword } = request.body;
+            const {
+                data: { id },
+            } = request.user;
+
+            const { newPassword, oldPassword } = request.body;
 
             await authService.updatePassword(id, oldPassword, newPassword);
 

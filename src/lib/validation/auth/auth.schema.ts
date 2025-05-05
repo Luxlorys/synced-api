@@ -40,7 +40,6 @@ export const loginSchema = z.object({
 });
 
 export const updatePasswordSchema = z.object({
-    id: z.number(),
     oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
     newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
