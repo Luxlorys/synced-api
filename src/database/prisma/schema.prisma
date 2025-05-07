@@ -12,13 +12,33 @@ enum Role {
   Participant
 }
 
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String
+  size       Int
+  identifier String   @unique()
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  adminId Int    @unique
+  admin   User   @relation("CompanyAdmin", fields: [adminId], references: [id], onDelete: Cascade)
+  users   User[] @relation("CompanyUsers")
+
+  @@map("company")
+}
+
 model User {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   lastUpdated DateTime? @map("last_update") @db.Timestamptz(6)
   password    String
-  email       String    @unique(map: "email_unique")
+  email       String    @unique
   role        Role
+  fullName    String
+
+  companyId Int?
+  company   Company? @relation("CompanyUsers", fields: [companyId], references: [id], onDelete: Cascade)
+
+  adminOfCompany Company? @relation("CompanyAdmin")
 
   @@map("user")
 }

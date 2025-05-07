@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
-import { AuthHandler } from "./auth.handler.js";
+import { AuthHandler } from "./models.js";
 import {
-    createUserSchema,
-    loginUserSchema,
-    loginSchema,
-    updatePasswordSchema,
+    createUserBodySchema,
+    loginBodySchema,
+    loginResponseSchema,
+    updatePasswordBodySchema,
 } from "@/lib/validation/auth/auth.schema.js";
 
 enum authRoutes {
@@ -23,9 +23,9 @@ export const createAuthRoutes = (
         {
             schema: {
                 tags: ["Auth"],
-                body: loginUserSchema,
+                body: loginBodySchema,
                 response: {
-                    200: loginSchema,
+                    200: loginResponseSchema,
                 },
             },
         },
@@ -37,9 +37,9 @@ export const createAuthRoutes = (
         {
             schema: {
                 tags: ["Auth"],
-                body: createUserSchema,
+                body: createUserBodySchema,
                 response: {
-                    200: loginSchema,
+                    200: loginResponseSchema,
                 },
             },
         },
@@ -52,7 +52,7 @@ export const createAuthRoutes = (
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["Auth"],
-                body: updatePasswordSchema,
+                body: updatePasswordBodySchema,
                 response: {
                     200: z.object({}),
                 },

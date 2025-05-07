@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { UserHandler } from "./user.handler.js";
-import { userSchema } from "@/lib/validation/auth/auth.schema.js";
+import { getUserResponseSchema } from "@/lib/validation/user/user.schema.js";
 
 enum UserRoutes {
     USER = "/",
@@ -19,7 +19,7 @@ export const createUserRoutes = (
                 tags: ["User"],
                 params: z.object({ id: z.string() }),
                 response: {
-                    200: userSchema,
+                    200: getUserResponseSchema,
                 },
             },
         },

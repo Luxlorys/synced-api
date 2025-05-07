@@ -1,29 +1,18 @@
+import { AuthService } from "./models.js";
 import { hashing } from "@/lib/hashing/hashing.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
+import { generateRandomCode } from "@/lib/helpers/generateRandomCode.js";
 import { UserRepository } from "@/database/repositories/user/user.repository.js";
+import { CompanyRepository } from "@/database/repositories/company/company.repository.js";
 import {
     ConflictError,
     NotFoundError,
     UnauthorizedError,
 } from "@/lib/errors/errors.js";
-import {
-    CreateUserType,
-    LoginUserType,
-    UserType,
-} from "@/lib/validation/auth/auth.schema.js";
-
-export type AuthService = {
-    login: ({ email, password }: LoginUserType) => Promise<UserType>;
-    register: ({ email, password, code }: CreateUserType) => Promise<UserType>;
-    updatePassword: (
-        userId: number,
-        oldPassword: string,
-        newPassword: string
-    ) => Promise<object>;
-};
 
 export const createauthService = (
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    companyRepository: CompanyRepository
 ): AuthService => ({
     login: async ({ email, password }) => {
         const user = await userRepository.findByEmail(email);
@@ -43,7 +32,14 @@ export const createauthService = (
 
         return user;
     },
-    register: async ({ email, password, code }) => {
+    register: async ({
+        email,
+        password,
+        fullName,
+        role,
+        company,
+        identifier,
+    }) => {
         const user = await userRepository.findByEmail(email);
 
         if (user) {
@@ -52,15 +48,41 @@ export const createauthService = (
 
         const hashedPassword = await hashing.hashPassword(password);
 
-        const createUserResult = await userRepository.create({
-            data: {
-                email,
+        if (role === "Admin") {
+            const companyIdentifier = generateRandomCode(4);
+
+            const createdUser = await userRepository.createAdminUser({
+                fullName,
                 password: hashedPassword,
-                role: code ? "Participant" : "Admin",
+                email,
+                company: {
+                    identifier: companyIdentifier,
+                    name: company!.name,
+                    size: company!.size,
+                },
+            });
+
+            return createdUser;
+        }
+
+        const companyByIdentifier = await companyRepository.findUniqueOrFail({
+            where: {
+                identifier,
             },
         });
 
-        return createUserResult;
+        if (!companyByIdentifier) {
+            throw new NotFoundError("Company not found");
+        }
+
+        const createdUser = await userRepository.createPaticipantUser({
+            companyId: companyByIdentifier.id,
+            email,
+            fullName,
+            password: hashedPassword,
+        });
+
+        return createdUser;
     },
     updatePassword: async (
         id: number,

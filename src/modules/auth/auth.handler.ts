@@ -1,33 +1,6 @@
-import { AuthService } from "./auth.service.js";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { AuthHandler, AuthService } from "./models.js";
 import { createTokens } from "@/lib/jwt/create-tokens.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import {
-    CreateUserType,
-    LoginUserType,
-    UpdatePasswordType,
-} from "@/lib/validation/auth/auth.schema.js";
-
-export type AuthHandler = {
-    login: (
-        request: FastifyRequest<{
-            Body: LoginUserType;
-        }>,
-        reply: FastifyReply
-    ) => Promise<void>;
-    register: (
-        request: FastifyRequest<{
-            Body: CreateUserType;
-        }>,
-        reply: FastifyReply
-    ) => Promise<void>;
-    updatePassword: (
-        request: FastifyRequest<{
-            Body: UpdatePasswordType;
-        }>,
-        reply: FastifyReply
-    ) => Promise<void>;
-};
 
 export const createAuthHandler = (authService: AuthService): AuthHandler => {
     return {
@@ -52,9 +25,9 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
             });
         },
         register: async (request, reply) => {
-            const { email, password, code } = request.body;
+            const userBody = request.body;
 
-            const user = await authService.register({ password, code, email });
+            const user = await authService.register(userBody);
 
             const { jwt, refreshToken } = createTokens(request.server, {
                 data: {
