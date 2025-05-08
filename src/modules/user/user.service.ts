@@ -2,9 +2,14 @@ import { UserService } from "./user.types.js";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import {
+    taskExtendedSelect,
+    TaskRepository,
+} from "@/database/repositories/task/task.repository.types.js";
 
 export const createuserService = (
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    taskRepository: TaskRepository
 ): UserService => ({
     getUserById: async (id: number) => {
         const user = await userRepository.findUniqueOrFail({
@@ -48,6 +53,21 @@ export const createuserService = (
         });
 
         return {};
+    },
+
+    getUsersTasks: async (params, userId) => {
+        const tasks = await taskRepository.findMany({
+            where: {
+                creatorId: userId,
+            },
+            skip: params.skip,
+            take: params.take,
+            select: taskExtendedSelect,
+        });
+
+        return {
+            tasks: tasks,
+        };
     },
 });
 

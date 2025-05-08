@@ -17,6 +17,17 @@ export const createUserHandler = (userService: UserService): UserHandler => {
 
             reply.status(200).send();
         },
+        getUsersTasks: async (request, reply) => {
+            const querystring = request.query;
+            const { id } = request.params;
+
+            const tasks = await userService.getUsersTasks(
+                querystring,
+                Number(id)
+            );
+
+            reply.status(200).send(tasks);
+        },
     };
 };
 
