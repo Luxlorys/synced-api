@@ -1,9 +1,10 @@
 import { EnvConfig } from "./env.type.js";
 import { FastifyBaseLogger } from "fastify";
 import { PrismaClient } from "@prisma/client/extension";
-import { UserService } from "@/modules/user/user.service.js";
-import { UserHandler } from "@/modules/user/user.handler.js";
+import { TaskService, TaskHandler } from "@/modules/task/task.types.js";
+import { UserService, UserHandler } from "@/modules/user/user.types.js";
 import { AuthHandler, AuthService } from "@/modules/auth/auth.types..js";
+import { TaskRepository } from "@/database/repositories/task/task.repository.types.js";
 import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
 import {
     CompanyHandler,
@@ -15,6 +16,11 @@ export type Cradle = {
     log: FastifyBaseLogger;
     prisma: PrismaClient;
     config: EnvConfig;
+
+    taskRepository: TaskRepository;
+
+    taskService: TaskService;
+    taskHandler: TaskHandler;
 
     companyService: CompanyService;
     companyHandler: CompanyHandler;

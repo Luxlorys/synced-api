@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
-import { UserHandler } from "./user.handler.js";
+import { UserHandler } from "./user.types.js";
 import { getUserResponseSchema } from "@/lib/validation/user/user.schema.js";
 
 enum UserRoutes {

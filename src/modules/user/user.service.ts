@@ -1,12 +1,7 @@
+import { UserService } from "./user.types.js";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { UserType } from "@/lib/validation/user/user.schema.js";
 import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
-
-export type UserService = {
-    getUserById: (id: number) => Promise<UserType>;
-    deleteUserById: (id: number) => Promise<object>;
-};
 
 export const createuserService = (
     userRepository: UserRepository
