@@ -9,7 +9,6 @@ export const userSchema = z.object({
     email: z.string().email(),
     fullName: z.string().min(1),
     role: RoleEnum,
-    companyId: z.number().int().nullable(),
 });
 
 export type UserType = z.infer<typeof userSchema>;

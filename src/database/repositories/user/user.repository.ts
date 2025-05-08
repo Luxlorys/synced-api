@@ -1,7 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { UserType } from "@/lib/validation/user/user.schema.js";
 import { PrismaAwaited } from "@/database/prisma/prisma.type.js";
 import { BaseRepository, generateRepository } from "../generate.repository.js";
 import {
@@ -20,10 +19,22 @@ type FindUniqueOrFail = {
         email: string
     ) => PrismaAwaited<PrismaClient["user"]["findUnique"]>;
 
-    createAdminUser: (payload: CreateAdminUserPayload) => Promise<UserType>;
-    createPaticipantUser: (
-        payload: CreateParticipantUserPayload
-    ) => Promise<UserType>;
+    createAdminUser: (payload: CreateAdminUserPayload) => Promise<
+        Prisma.UserGetPayload<{
+            omit: {
+                password: true;
+                companyId: true;
+            };
+        }>
+    >;
+    createPaticipantUser: (payload: CreateParticipantUserPayload) => Promise<
+        Prisma.UserGetPayload<{
+            omit: {
+                password: true;
+                companyId: true;
+            };
+        }>
+    >;
 };
 
 export const createUserRepository = (prisma: PrismaClient): UserRepository => {
@@ -50,7 +61,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
             return user;
         },
         createAdminUser: async ({ company, email, fullName, password }) => {
-            const createdUser = prisma.$transaction(async (tx) => {
+            const user = prisma.$transaction(async (tx) => {
                 const createdUser = await tx.user.create({
                     data: {
                         email,
@@ -85,7 +96,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                 return updatedUser;
             });
 
-            return createdUser;
+            return user;
         },
         createPaticipantUser: async ({
             companyId,
@@ -93,17 +104,14 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
             fullName,
             password,
         }) => {
-            const createdUser = await prisma.$transaction(async (tx) => {
-                const user = await tx.user.create({
+            const user = await prisma.$transaction(async (tx) => {
+                const createdUser = await tx.user.create({
                     data: {
                         email,
                         fullName,
                         password,
                         role: "Participant",
                         companyId: companyId,
-                    },
-                    omit: {
-                        password: true,
                     },
                 });
 
@@ -118,10 +126,10 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                     },
                 });
 
-                return user;
+                return createdUser;
             });
 
-            return createdUser;
+            return user;
         },
     };
 };
