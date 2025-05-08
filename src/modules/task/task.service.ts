@@ -12,17 +12,12 @@ export const createtaskService = (
     userRepository: UserRepository
 ): TaskService => ({
     createTask: async (payload, userId) => {
-        const user = await userRepository.findUnique({
-            where: {
-                id: userId,
-            },
-            select: {
-                adminOfCompany: true,
-                companyId: true,
-            },
+        const { companyId } = await userRepository.findUniqueOrFail({
+            where: { id: userId },
+            select: { companyId: true },
         });
 
-        if (!user?.adminOfCompany || !user.companyId) {
+        if (!companyId) {
             throw new ForbiddenError("This user cannot create tasks");
         }
 
@@ -35,12 +30,35 @@ export const createtaskService = (
                 priority: payload.priority,
                 status: payload.status,
                 creatorId: userId,
-                companyId: user.companyId,
+                companyId: companyId,
             },
             select: taskExtendedSelect,
         });
 
         return createdTask;
+    },
+    updateTask: async (payload, id) => {
+        const updatedTask = await taskRepository.update({
+            where: {
+                id,
+            },
+            data: {
+                ...payload,
+            },
+            select: taskExtendedSelect,
+        });
+
+        return updatedTask;
+    },
+
+    deleteTask: async (taskId) => {
+        await taskRepository.delete({
+            where: {
+                id: taskId,
+            },
+        });
+
+        return {};
     },
 });
 

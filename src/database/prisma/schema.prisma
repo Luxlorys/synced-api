@@ -71,7 +71,7 @@ model Task {
   description   String
   status        TaskStatus
   priority      TaskPriority
-  deadline      String
+  deadline      DateTime
   estimatedTime Int
   spentTime     Int?
 
@@ -84,5 +84,6 @@ model Task {
   @@index([id])
   @@index([status])
   @@index([priority])
+  @@index([deadline])
   @@map("task")
 }

@@ -1,12 +1,15 @@
+import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { TaskHandler } from "./task.types.js";
 import {
     createTaskBodySchema,
     getTaskResponseSchema,
+    updateTaskBodySchema,
 } from "@/lib/validation/task/task.schema.js";
 
 enum TaskRoutes {
     CREATE = "/",
+    RUD = "/:id",
 }
 
 export const createTaskRoutes = (
@@ -16,7 +19,7 @@ export const createTaskRoutes = (
     fastify.post(
         TaskRoutes.CREATE,
         {
-            preHandler: [fastify.authenticate],
+            preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
                 tags: ["Task"],
                 body: createTaskBodySchema,
@@ -26,5 +29,34 @@ export const createTaskRoutes = (
             },
         },
         taskHandler.createTask
+    );
+
+    fastify.patch(
+        TaskRoutes.RUD,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Task"],
+                body: updateTaskBodySchema,
+                response: {
+                    200: getTaskResponseSchema,
+                },
+            },
+        },
+        taskHandler.updateTask
+    );
+
+    fastify.delete(
+        TaskRoutes.RUD,
+        {
+            preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
+            schema: {
+                tags: ["Task"],
+                response: {
+                    200: z.object({}),
+                },
+            },
+        },
+        taskHandler.deleteTask
     );
 };

@@ -12,6 +12,8 @@ declare module "fastify" {
         di: AwilixContainer<Cradle>;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         authenticate: any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        checkAdminPermissions: any;
     }
 
     export interface FastifyRequest {

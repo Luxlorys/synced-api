@@ -4,18 +4,21 @@ export const TaskStatusEnum = z.enum(["TODO", "IN_PROGRESS", "DONE"]);
 
 export const TaskPriorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"]);
 
-export const createTaskBodySchema = z.object({
+const baseTaskSchema = z.object({
     title: z.string(),
     description: z.string(),
-    deadline: z.string().datetime(),
     priority: TaskPriorityEnum,
     status: TaskStatusEnum,
     estimatedTime: z.number().int(),
 });
 
+export const createTaskBodySchema = baseTaskSchema.extend({
+    deadline: z.string().datetime(),
+});
+
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 
-export const getTaskResponseSchema = createTaskBodySchema.extend({
+export const getTaskResponseSchema = baseTaskSchema.extend({
     creator: z.object({
         fullName: z.string(),
         email: z.string().email(),
@@ -28,6 +31,19 @@ export const getTaskResponseSchema = createTaskBodySchema.extend({
     spentTime: z.number().nullable(),
     createdAt: z.date(),
     lastUpdated: z.date().nullable(),
+    deadline: z.date(),
 });
 
 export type GetTaskResponse = z.infer<typeof getTaskResponseSchema>;
+
+export const updateTaskBodySchema = z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    priority: TaskPriorityEnum.optional(),
+    status: TaskStatusEnum.optional(),
+    estimatedTime: z.number().int().optional(),
+    deadline: z.string().datetime().optional(),
+    spentTime: z.number().nullable().optional(),
+});
+
+export type UpdateTaskBody = z.infer<typeof updateTaskBodySchema>;

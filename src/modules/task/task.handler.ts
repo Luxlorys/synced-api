@@ -14,6 +14,26 @@ export const createTaskHandler = (taskService: TaskService): TaskHandler => {
 
             reply.code(200).send(createdTask);
         },
+
+        updateTask: async (request, reply) => {
+            const { id } = request.params;
+            const payload = request.body;
+
+            const updatedTask = await taskService.updateTask(
+                payload,
+                Number(id)
+            );
+
+            reply.code(200).send(updatedTask);
+        },
+
+        deleteTask: async (request, reply) => {
+            const { id } = request.params;
+
+            await taskService.deleteTask(Number(id));
+
+            reply.code(200).send();
+        },
     };
 };
 
