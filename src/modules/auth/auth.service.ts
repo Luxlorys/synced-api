@@ -1,9 +1,9 @@
-import { AuthService } from "./models.js";
+import { AuthService } from "./auth.types..js";
 import { hashing } from "@/lib/hashing/hashing.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { generateRandomCode } from "@/lib/helpers/generateRandomCode.js";
-import { UserRepository } from "@/database/repositories/user/user.repository.js";
-import { CompanyRepository } from "@/database/repositories/company/company.repository.js";
+import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import { CompanyRepository } from "@/database/repositories/company/company.repository.types.js";
 import {
     ConflictError,
     NotFoundError,
@@ -43,7 +43,7 @@ export const createauthService = (
         const user = await userRepository.findByEmail(email);
 
         if (user) {
-            throw new ConflictError("User already exests");
+            throw new ConflictError("User already exists");
         }
 
         const hashedPassword = await hashing.hashPassword(password);
@@ -70,10 +70,6 @@ export const createauthService = (
                 identifier,
             },
         });
-
-        if (!companyByIdentifier) {
-            throw new NotFoundError("Company not found");
-        }
 
         const createdUser = await userRepository.createPaticipantUser({
             companyId: companyByIdentifier.id,

@@ -1,7 +1,7 @@
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { UserType } from "@/lib/validation/user/user.schema.js";
-import { UserRepository } from "@/database/repositories/user/user.repository.js";
+import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
 
 export type UserService = {
     getUserById: (id: number) => Promise<UserType>;

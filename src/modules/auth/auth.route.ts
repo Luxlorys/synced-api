@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
-import { AuthHandler } from "./models.js";
+import { AuthHandler } from "./auth.types..js";
 import {
     createUserBodySchema,
     loginBodySchema,

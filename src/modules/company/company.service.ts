@@ -1,7 +1,7 @@
-import { CompanyService } from "./models.js";
+import { CompanyService } from "./company.types.js";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { CompanyRepository } from "@/database/repositories/company/company.repository.js";
+import { CompanyRepository } from "@/database/repositories/company/company.repository.types.js";
 
 export const createcompanyService = (
     companyRepository: CompanyRepository

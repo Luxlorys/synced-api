@@ -1,6 +1,6 @@
-import { AuthHandler, AuthService } from "./models.js";
 import { createTokens } from "@/lib/jwt/create-tokens.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
+import { AuthHandler, AuthService } from "./auth.types..js";
 
 export const createAuthHandler = (authService: AuthService): AuthHandler => {
     return {

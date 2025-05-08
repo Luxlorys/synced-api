@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
-import { CompanyHandler } from "./models.js";
+import { CompanyHandler } from "./company.types.js";
 import { getCompanyResponseSchema } from "@/lib/validation/company/company.schema.js";
 
 enum CompanyRoutes {

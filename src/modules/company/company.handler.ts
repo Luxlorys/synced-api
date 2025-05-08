@@ -1,5 +1,5 @@
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { CompanyHandler, CompanyService } from "./models.js";
+import { CompanyHandler, CompanyService } from "./company.types.js";
 
 export const createCompanyHandler = (
     companyService: CompanyService

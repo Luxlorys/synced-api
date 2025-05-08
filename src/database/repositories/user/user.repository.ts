@@ -1,41 +1,12 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { PrismaAwaited } from "@/database/prisma/prisma.type.js";
-import { BaseRepository, generateRepository } from "../generate.repository.js";
+import { generateRepository } from "../generate.repository.js";
 import {
-    CreateAdminUserPayload,
-    CreateParticipantUserPayload,
-} from "@/modules/auth/models.js";
-
-export type UserRepository = BaseRepository<"user"> & FindUniqueOrFail;
-
-type FindUniqueOrFail = {
-    findUniqueOrFail: (
-        payload: Prisma.UserFindUniqueArgs
-    ) => PrismaAwaited<PrismaClient["user"]["findUnique"]>;
-
-    findByEmail: (
-        email: string
-    ) => PrismaAwaited<PrismaClient["user"]["findUnique"]>;
-
-    createAdminUser: (payload: CreateAdminUserPayload) => Promise<
-        Prisma.UserGetPayload<{
-            omit: {
-                password: true;
-                companyId: true;
-            };
-        }>
-    >;
-    createPaticipantUser: (payload: CreateParticipantUserPayload) => Promise<
-        Prisma.UserGetPayload<{
-            omit: {
-                password: true;
-                companyId: true;
-            };
-        }>
-    >;
-};
+    userDefaultSelect,
+    UserRepository,
+    userSelectWithPassword,
+} from "./user.repository.types.js";
 
 export const createUserRepository = (prisma: PrismaClient): UserRepository => {
     const repository = generateRepository(prisma, "User");
@@ -56,6 +27,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                 where: {
                     email: email,
                 },
+                select: userSelectWithPassword,
             });
 
             return user;
@@ -88,9 +60,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                     data: {
                         companyId: createdCompany.id,
                     },
-                    omit: {
-                        password: true,
-                    },
+                    select: userDefaultSelect,
                 });
 
                 return updatedUser;
@@ -113,6 +83,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                         role: "Participant",
                         companyId: companyId,
                     },
+                    select: userDefaultSelect,
                 });
 
                 await tx.company.update({
