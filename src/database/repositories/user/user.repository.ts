@@ -1,20 +1,12 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { PrismaAwaited } from "@/database/prisma/prisma.type.js";
-import { BaseRepository, generateRepository } from "../generate.repository.js";
-
-export type UserRepository = BaseRepository<"user"> & FindUniqueOrFail;
-
-type FindUniqueOrFail = {
-    findUniqueOrFail: (
-        payload: Prisma.UserFindUniqueArgs
-    ) => PrismaAwaited<PrismaClient["user"]["findUnique"]>;
-
-    findByEmail: (
-        email: string
-    ) => PrismaAwaited<PrismaClient["user"]["findUnique"]>;
-};
+import { generateRepository } from "../generate.repository.js";
+import {
+    userDefaultSelect,
+    UserRepository,
+    userSelectWithPassword,
+} from "./user.repository.types.js";
 
 export const createUserRepository = (prisma: PrismaClient): UserRepository => {
     const repository = generateRepository(prisma, "User");
@@ -35,6 +27,77 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                 where: {
                     email: email,
                 },
+                select: userSelectWithPassword,
+            });
+
+            return user;
+        },
+        createAdminUser: async ({ company, email, fullName, password }) => {
+            const user = prisma.$transaction(async (tx) => {
+                const createdUser = await tx.user.create({
+                    data: {
+                        email,
+                        fullName,
+                        password,
+                        role: "Admin",
+                    },
+                });
+
+                const createdCompany = await tx.company.create({
+                    data: {
+                        name: company.name,
+                        size: company.size,
+                        identifier: company.identifier,
+                        adminId: createdUser.id,
+                        users: {
+                            connect: [{ id: createdUser.id }],
+                        },
+                    },
+                });
+
+                const updatedUser = await tx.user.update({
+                    where: { id: createdUser.id },
+                    data: {
+                        companyId: createdCompany.id,
+                    },
+                    select: userDefaultSelect,
+                });
+
+                return updatedUser;
+            });
+
+            return user;
+        },
+        createPaticipantUser: async ({
+            companyId,
+            email,
+            fullName,
+            password,
+        }) => {
+            const user = await prisma.$transaction(async (tx) => {
+                const createdUser = await tx.user.create({
+                    data: {
+                        email,
+                        fullName,
+                        password,
+                        role: "Participant",
+                        companyId: companyId,
+                    },
+                    select: userDefaultSelect,
+                });
+
+                await tx.company.update({
+                    where: {
+                        id: companyId,
+                    },
+                    data: {
+                        users: {
+                            connect: user,
+                        },
+                    },
+                });
+
+                return createdUser;
             });
 
             return user;

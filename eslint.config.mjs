@@ -58,7 +58,7 @@ export default [
             "no-negated-condition": "error",
             "no-unneeded-ternary": "error",
 
-            "id-denylist": ["error", "cb", "item", "i", "el"],
+            "id-denylist": ["error", "cb", "i", "el"],
 
             "padding-line-between-statements": [
                 "warn",

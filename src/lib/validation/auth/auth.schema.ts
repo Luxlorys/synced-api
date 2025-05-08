@@ -1,37 +1,28 @@
 import { z } from "zod";
+import { RoleEnum, userSchema } from "../user/user.schema.js";
 
 const MIN_PASSWORD_LENGTH = 8;
 
-const OTP_CODE_LENGTH = 4;
-
-export const createUserSchema = z.object({
+export const createUserBodySchema = z.object({
     email: z.string().email(),
     password: z.string().min(MIN_PASSWORD_LENGTH),
-    code: z.string().min(OTP_CODE_LENGTH).max(OTP_CODE_LENGTH).optional(),
-});
-
-export type CreateUserType = z.infer<typeof createUserSchema>;
-
-export const loginUserSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(MIN_PASSWORD_LENGTH),
-});
-
-export type LoginUserType = z.infer<typeof loginUserSchema>;
-
-const RoleEnum = z.enum(["Admin", "Participant"]);
-
-export const userSchema = z.object({
-    id: z.number(),
-    email: z.string().email(),
-    createdAt: z.date(),
-    lastUpdated: z.date().nullable(),
+    fullName: z.string().min(1),
     role: RoleEnum,
+    company: z
+        .object({
+            name: z.string().min(1),
+            size: z.number().int().min(1),
+        })
+        .optional(),
+    identifier: z.string().min(1).optional(),
 });
 
-export type UserType = z.infer<typeof userSchema>;
+export const loginBodySchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(MIN_PASSWORD_LENGTH),
+});
 
-export const loginSchema = z.object({
+export const loginResponseSchema = z.object({
     authentication: z.object({
         accessToken: z.string(),
         refreshToken: z.string(),
@@ -39,10 +30,13 @@ export const loginSchema = z.object({
     user: userSchema,
 });
 
-export const updatePasswordSchema = z.object({
-    id: z.number(),
+export const updatePasswordBodySchema = z.object({
     oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
     newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
 
-export type UpdatePasswordType = z.infer<typeof updatePasswordSchema>;
+export type UpdatePasswordBodyType = z.infer<typeof updatePasswordBodySchema>;
+
+export type LoginBodyType = z.infer<typeof loginBodySchema>;
+
+export type CreateUserBodyType = z.infer<typeof createUserBodySchema>;
