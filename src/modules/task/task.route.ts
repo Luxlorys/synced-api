@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { TaskHandler } from "./task.types.js";
+import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     createTaskBodySchema,
     getTaskResponseSchema,
@@ -16,6 +17,21 @@ export const createTaskRoutes = (
     fastify: FastifyInstance,
     taskHandler: TaskHandler
 ) => {
+    fastify.get(
+        TaskRoutes.RUD,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Task"],
+                params: baseIdParamSchema,
+                response: {
+                    200: getTaskResponseSchema,
+                },
+            },
+        },
+        taskHandler.getTaskById
+    );
+
     fastify.post(
         TaskRoutes.CREATE,
         {
@@ -52,6 +68,7 @@ export const createTaskRoutes = (
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
                 tags: ["Task"],
+                params: baseIdParamSchema,
                 response: {
                     200: z.object({}),
                 },

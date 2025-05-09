@@ -3,6 +3,14 @@ import { TaskHandler, TaskService } from "./task.types.js";
 
 export const createTaskHandler = (taskService: TaskService): TaskHandler => {
     return {
+        getTaskById: async (request, reply) => {
+            const { id } = request.params;
+
+            const task = await taskService.getTaskById(id);
+
+            reply.code(200).send(task);
+        },
+
         createTask: async (request, reply) => {
             const {
                 data: { id },
@@ -21,7 +29,7 @@ export const createTaskHandler = (taskService: TaskService): TaskHandler => {
 
             const updatedTask = await taskService.updateTask(
                 payload,
-                Number(id)
+                id
             );
 
             reply.code(200).send(updatedTask);
@@ -30,7 +38,7 @@ export const createTaskHandler = (taskService: TaskService): TaskHandler => {
         deleteTask: async (request, reply) => {
             const { id } = request.params;
 
-            await taskService.deleteTask(Number(id));
+            await taskService.deleteTask(id);
 
             reply.code(200).send();
         },

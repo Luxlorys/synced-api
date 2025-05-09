@@ -11,6 +11,17 @@ export const createtaskService = (
     taskRepository: TaskRepository,
     userRepository: UserRepository
 ): TaskService => ({
+    getTaskById: async (id) => {
+        const task = await taskRepository.findUniqueOrFail({
+            where: {
+                id,
+            },
+            select: taskExtendedSelect,
+        });
+
+        return task;
+    },
+
     createTask: async (payload, userId) => {
         const { companyId } = await userRepository.findUniqueOrFail({
             where: { id: userId },
@@ -37,6 +48,7 @@ export const createtaskService = (
 
         return createdTask;
     },
+
     updateTask: async (payload, id) => {
         const updatedTask = await taskRepository.update({
             where: {
