@@ -1,6 +1,6 @@
 export interface User {
     data: {
         id: number;
-        email: string;
+        role: "Admin" | "Participant";
     };
 }

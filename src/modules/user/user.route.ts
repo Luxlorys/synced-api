@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
-import { UserHandler } from "./user.handler.js";
-import { getUserResponseSchema } from "@/lib/validation/user/user.schema.js";
+import { UserHandler } from "./user.types.js";
+import { getUserResponseSchema, getUsersTasksParamsSchema, getUsersTasksResponseSchema } from "@/lib/validation/user/user.schema.js";
 
 enum UserRoutes {
     USER = "/",
+    USER_TASKS = "/tasks"
 }
 
 export const createUserRoutes = (
@@ -39,5 +40,21 @@ export const createUserRoutes = (
             },
         },
         userHandler.deleteUserById
+    );
+
+    fastify.get(
+        `${UserRoutes.USER_TASKS}/:id`,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["User"],
+                params: z.object({ id: z.string() }),
+                querystring: getUsersTasksParamsSchema,
+                response: {
+                    200: getUsersTasksResponseSchema,
+                },
+            },
+        },
+        userHandler.getUsersTasks
     );
 };

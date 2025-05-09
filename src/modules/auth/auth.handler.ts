@@ -11,7 +11,7 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
 
             const { jwt, refreshToken } = createTokens(request.server, {
                 data: {
-                    email: user.email,
+                    role: user.role,
                     id: user.id,
                 },
             });
@@ -31,7 +31,7 @@ export const createAuthHandler = (authService: AuthService): AuthHandler => {
 
             const { jwt, refreshToken } = createTokens(request.server, {
                 data: {
-                    email: user.email,
+                    role: user.role,
                     id: user.id,
                 },
             });

@@ -19,10 +19,15 @@ model Company {
   identifier String   @unique()
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  adminId Int    @unique
-  admin   User   @relation("CompanyAdmin", fields: [adminId], references: [id], onDelete: Cascade)
-  users   User[] @relation("CompanyUsers")
+  adminId Int  @unique
+  admin   User @relation("CompanyAdmin", fields: [adminId], references: [id], onDelete: Cascade)
 
+  users User[] @relation("CompanyUsers")
+
+  tasks Task[] @relation("CompanyTasks")
+
+  @@index([id])
+  @@index([identifier])
   @@map("company")
 }
 
@@ -40,5 +45,45 @@ model User {
 
   adminOfCompany Company? @relation("CompanyAdmin")
 
+  tasks Task[] @relation("UserTasks")
+
+  @@index([id])
   @@map("user")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Task {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastUpdated   DateTime?    @map("last_update") @db.Timestamptz(6)
+  title         String
+  description   String
+  status        TaskStatus
+  priority      TaskPriority
+  deadline      DateTime
+  estimatedTime Int
+  spentTime     Int?
+
+  creatorId Int
+  creator   User @relation("UserTasks", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  companyId Int
+  company   Company @relation("CompanyTasks", fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([id])
+  @@index([status])
+  @@index([priority])
+  @@index([deadline])
+  @@map("task")
 }

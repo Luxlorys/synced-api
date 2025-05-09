@@ -1,21 +1,5 @@
-import { UserService } from "./user.service.js";
-import { FastifyReply, FastifyRequest } from "fastify";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-
-export type UserHandler = {
-    getUserById: (
-        request: FastifyRequest<{
-            Params: { id: number };
-        }>,
-        reply: FastifyReply
-    ) => Promise<void>;
-    deleteUserById: (
-        request: FastifyRequest<{
-            Params: { id: number };
-        }>,
-        reply: FastifyReply
-    ) => Promise<void>;
-};
+import { UserHandler, UserService } from "./user.types.js";
 
 export const createUserHandler = (userService: UserService): UserHandler => {
     return {
@@ -32,6 +16,17 @@ export const createUserHandler = (userService: UserService): UserHandler => {
             await userService.deleteUserById(Number(id));
 
             reply.status(200).send();
+        },
+        getUsersTasks: async (request, reply) => {
+            const querystring = request.query;
+            const { id } = request.params;
+
+            const tasks = await userService.getUsersTasks(
+                querystring,
+                Number(id)
+            );
+
+            reply.status(200).send(tasks);
         },
     };
 };
