@@ -7,3 +7,23 @@ export type CompanyRepository = BaseRepository<"company"> & {
         args: Prisma.SelectSubset<T, Prisma.CompanyFindUniqueArgs>
     ) => Promise<GetFindResult<Prisma.$CompanyPayload, T, object>>;
 };
+
+export const companyDefaultSelect = {
+    admin: {
+        select: {
+            email: true,
+            fullName: true,
+        },
+    },
+    users: {
+        select: {
+            email: true,
+            fullName: true,
+        },
+    },
+    id: true,
+    size: true,
+    identifier: true,
+    createdAt: true,
+    name: true,
+} satisfies Prisma.CompanySelect;

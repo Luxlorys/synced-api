@@ -46,6 +46,7 @@ export const userDefaultSelect = {
         select: {
             name: true,
             size: true,
+            identifier: true,
         },
     },
 } satisfies Prisma.UserSelect;

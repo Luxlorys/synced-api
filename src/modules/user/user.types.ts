@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { GetUsersTasksParams, GetUsersTasksResponse, UserType } from "@/lib/validation/user/user.schema.js";
+import { GetUserResponse, GetUsersTasksParams, GetUsersTasksResponse } from "@/lib/validation/user/user.schema.js";
 
 export type UserService = {
-    getUserById: (id: number) => Promise<UserType>;
+    getUserById: (id: number) => Promise<GetUserResponse>;
     deleteUserById: (id: number) => Promise<object>;
     getUsersTasks: (querystring: GetUsersTasksParams, userId: number) => Promise<GetUsersTasksResponse>;
 };

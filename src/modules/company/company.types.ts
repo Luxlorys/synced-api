@@ -1,4 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import {
+    GetCompanyResponse,
+    UpdateCompanyBody,
+} from "@/lib/validation/company/company.schema.js";
 
 export type CompanyHandler = {
     getCompanyById: (
@@ -7,23 +11,23 @@ export type CompanyHandler = {
         }>,
         reply: FastifyReply
     ) => Promise<void>;
+    updateCompany: (
+        request: FastifyRequest<{
+            Body: UpdateCompanyBody;
+            Params: { id: number };
+        }>,
+        reply: FastifyReply
+    ) => Promise<void>;
+    deleteParticipant: (
+        request: FastifyRequest<{
+            Body: { userId: number };
+        }>,
+        reply: FastifyReply
+    ) => Promise<void>;
 };
 
 export type CompanyService = {
-    getCompanyById: (id: number) => Promise<Company>;
-};
-
-type BaseUser = {
-    fullName: string;
-    email: string;
-};
-
-export type Company = {
-    id: number;
-    name: string;
-    size: number;
-    identifier: string;
-    createdAt: Date;
-    admin: BaseUser;
-    users: BaseUser[];
+    getCompanyById: (id: number) => Promise<GetCompanyResponse>;
+    updateCompany: (payload: UpdateCompanyBody, companyId: number) => Promise<GetCompanyResponse>;
+    deleteParticipant: (userId: number) => Promise<object>;
 };

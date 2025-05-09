@@ -1,7 +1,7 @@
 import { UserService } from "./user.types.js";
 import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import { userDefaultSelect, UserRepository } from "@/database/repositories/user/user.repository.types.js";
 import {
     taskExtendedSelect,
     TaskRepository,
@@ -16,17 +16,7 @@ export const createuserService = (
             where: {
                 id,
             },
-            select: {
-                id: true,
-                email: true,
-                createdAt: true,
-                lastUpdated: true,
-                role: true,
-                company: true,
-                companyId: true,
-                fullName: true,
-                adminOfCompany: true,
-            },
+            select: userDefaultSelect,
         });
 
         if (!user) {
@@ -36,15 +26,11 @@ export const createuserService = (
         return user;
     },
     deleteUserById: async (id: number) => {
-        const user = await userRepository.findUniqueOrFail({
+        await userRepository.findUniqueOrFail({
             where: {
                 id,
             },
         });
-
-        if (!user) {
-            throw new NotFoundError("User not found");
-        }
 
         await userRepository.delete({
             where: {

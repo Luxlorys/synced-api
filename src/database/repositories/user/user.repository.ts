@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { generateRepository } from "../generate.repository.js";
+import { BadRequestError, NotFoundError } from "@/lib/errors/errors.js";
 import {
     userDefaultSelect,
     UserRepository,
@@ -74,6 +74,20 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
             fullName,
             password,
         }) => {
+            const { "0": companySize, "1": userCount } = await Promise.all([
+                prisma.company.findUnique({
+                    where: { id: companyId },
+                    select: { size: true },
+                }),
+                prisma.user.count({
+                    where: { companyId },
+                }),
+            ]);            
+
+            if (companySize?.size === userCount) {
+                throw new BadRequestError("Company exceed it's size limit");
+            }
+
             const user = await prisma.$transaction(async (tx) => {
                 const createdUser = await tx.user.create({
                     data: {
@@ -92,7 +106,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                     },
                     data: {
                         users: {
-                            connect: user,
+                            connect: createdUser,
                         },
                     },
                 });
