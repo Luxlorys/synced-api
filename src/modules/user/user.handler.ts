@@ -6,14 +6,22 @@ export const createUserHandler = (userService: UserService): UserHandler => {
         getUserById: async (request, reply) => {
             const { id } = request.params;
 
-            const user = await userService.getUserById(Number(id));
+            const user = await userService.getUserById(id);
 
             reply.status(200).send(user);
+        },
+        updateUserById: async (request, reply) => {
+            const { id } = request.params;
+            const payload = request.body;
+
+            const updatedUser = await userService.updateUserById(payload, id);
+
+            reply.status(200).send(updatedUser);
         },
         deleteUserById: async (request, reply) => {
             const { id } = request.params;
 
-            await userService.deleteUserById(Number(id));
+            await userService.deleteUserById(id);
 
             reply.status(200).send();
         },
@@ -23,7 +31,7 @@ export const createUserHandler = (userService: UserService): UserHandler => {
 
             const tasks = await userService.getUsersTasks(
                 querystring,
-                Number(id)
+                id
             );
 
             reply.status(200).send(tasks);

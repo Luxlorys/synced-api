@@ -8,20 +8,24 @@ import {
 
 export const createcompanyService = (
     companyRepository: CompanyRepository,
-    userRepository: UserRepository,
+    userRepository: UserRepository
 ): CompanyService => ({
     getCompanyById: async (id) => {
-        const company = await companyRepository.findUniqueOrFail({
+        return await companyRepository.findUniqueOrFail({
             where: {
                 id,
             },
             select: companyDefaultSelect,
         });
-
-        return company;
     },
 
     updateCompany: async (payload, companyId) => {
+        await companyRepository.findUniqueOrFail({
+            where: {
+                id: companyId,
+            },
+        });
+
         const updatedCompany = await companyRepository.update({
             where: {
                 id: companyId,
@@ -36,6 +40,10 @@ export const createcompanyService = (
     },
 
     deleteParticipant: async (userId) => {
+        await userRepository.findUniqueOrFail({
+            where: { id: userId },
+        });
+
         await userRepository.delete({
             where: { id: userId },
         });

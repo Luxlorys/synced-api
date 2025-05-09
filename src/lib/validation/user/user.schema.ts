@@ -21,6 +21,13 @@ export const getUserResponseSchema = z.object({
 
 export type GetUserResponse = z.infer<typeof getUserResponseSchema>;
 
+export const updateUserBodySchema = z.object({
+    email: z.string().email().optional(),
+    fullName: z.string().optional(),
+});
+
+export type UpdateUserBody = z.infer<typeof updateUserBodySchema>;
+
 export const getUsersTasksResponseSchema = z.object({
     tasks: z.array(getTaskResponseSchema),
 });
