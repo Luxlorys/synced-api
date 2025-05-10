@@ -47,6 +47,8 @@ model User {
 
   tasks Task[] @relation("UserTasks")
 
+  comments TaskComment[] @relation("CommentAuthor")
+
   @@index([id])
   @@map("user")
 }
@@ -55,6 +57,7 @@ enum TaskStatus {
   TODO
   IN_PROGRESS
   DONE
+  BLOCKED
 }
 
 enum TaskPriority {
@@ -81,9 +84,25 @@ model Task {
   companyId Int
   company   Company @relation("CompanyTasks", fields: [companyId], references: [id], onDelete: Cascade)
 
+  comments TaskComment[] @relation("TaskComments")
+
   @@index([id])
   @@index([status])
   @@index([priority])
   @@index([deadline])
   @@map("task")
+}
+
+model TaskComment {
+  id   Int    @id @default(autoincrement())
+  text String
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  taskId Int
+  task   Task @relation("TaskComments", fields: [taskId], references: [id], onDelete: Cascade)
+
+  authorId Int
+  author   User @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("taskComment")
 }
