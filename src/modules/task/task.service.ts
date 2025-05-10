@@ -50,6 +50,12 @@ export const createtaskService = (
     },
 
     updateTask: async (payload, id) => {
+        await taskRepository.findUniqueOrFail({
+            where: {
+                id,
+            },
+        });
+
         const updatedTask = await taskRepository.update({
             where: {
                 id,
@@ -64,6 +70,12 @@ export const createtaskService = (
     },
 
     deleteTask: async (taskId) => {
+        await taskRepository.findUniqueOrFail({
+            where: {
+                id: taskId,
+            },
+        });
+        
         await taskRepository.delete({
             where: {
                 id: taskId,

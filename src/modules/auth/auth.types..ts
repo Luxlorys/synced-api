@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { UserType } from "@/lib/validation/user/user.schema.js";
+import { GetUserResponse } from "@/lib/validation/user/user.schema.js";
 import {
     CreateUserBodyType,
     LoginBodyType,
@@ -25,7 +25,7 @@ export type CreateParticipantUserPayload = {
 };
 
 export type AuthService = {
-    login: ({ email, password }: LoginBodyType) => Promise<UserType>;
+    login: ({ email, password }: LoginBodyType) => Promise<GetUserResponse>;
     register: ({
         email,
         password,
@@ -33,7 +33,7 @@ export type AuthService = {
         role,
         company,
         identifier,
-    }: CreateUserBodyType) => Promise<UserType>;
+    }: CreateUserBodyType) => Promise<GetUserResponse>;
     updatePassword: (
         userId: number,
         oldPassword: string,

@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { UserHandler } from "./user.types.js";
-import { getUserResponseSchema, getUsersTasksParamsSchema, getUsersTasksResponseSchema } from "@/lib/validation/user/user.schema.js";
+import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
+import { getUserResponseSchema, getUsersTasksParamsSchema, getUsersTasksResponseSchema, updateUserBodySchema } from "@/lib/validation/user/user.schema.js";
 
 enum UserRoutes {
-    USER = "/",
-    USER_TASKS = "/tasks"
+    USER = "/:id",
+    USER_TASKS = "/tasks/:id"
 }
 
 export const createUserRoutes = (
@@ -13,12 +14,12 @@ export const createUserRoutes = (
     userHandler: UserHandler
 ) => {
     fastify.get(
-        `${UserRoutes.USER}:id`,
+        UserRoutes.USER,
         {
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["User"],
-                params: z.object({ id: z.string() }),
+                params: baseIdParamSchema,
                 response: {
                     200: getUserResponseSchema,
                 },
@@ -27,15 +28,31 @@ export const createUserRoutes = (
         userHandler.getUserById
     );
 
-    fastify.delete(
-        `${UserRoutes.USER}:id`,
+    fastify.patch(
+        UserRoutes.USER,
         {
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["User"],
-                params: z.object({ id: z.string() }),
+                params: baseIdParamSchema,
+                body: updateUserBodySchema,
                 response: {
-                    200: z.object({}),
+                    200: getUserResponseSchema,
+                },
+            },
+        },
+        userHandler.updateUserById
+    );
+
+    fastify.delete(
+        UserRoutes.USER,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["User"],
+                params: baseIdParamSchema,
+                response: {
+                    200: getUserResponseSchema,
                 },
             },
         },
@@ -43,7 +60,7 @@ export const createUserRoutes = (
     );
 
     fastify.get(
-        `${UserRoutes.USER_TASKS}/:id`,
+        UserRoutes.USER_TASKS,
         {
             preHandler: [fastify.authenticate],
             schema: {

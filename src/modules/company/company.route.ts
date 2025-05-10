@@ -1,10 +1,16 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { CompanyHandler } from "./company.types.js";
-import { getCompanyResponseSchema } from "@/lib/validation/company/company.schema.js";
+import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
+import {
+    deleteParticipantFromCompanyBodySchema,
+    getCompanyResponseSchema,
+    updateCompanyBodySchema,
+} from "@/lib/validation/company/company.schema.js";
 
 enum CompanyRoutes {
-    COMPANIES = "/",
+    RUD = "/:id",
+    DELETE_PARTICIPANT = "/delete-participant",
 }
 
 export const createCompanyRoutes = (
@@ -12,17 +18,48 @@ export const createCompanyRoutes = (
     companyHandler: CompanyHandler
 ) => {
     fastify.get(
-        `${CompanyRoutes.COMPANIES}:id`,
+        CompanyRoutes.RUD,
         {
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["Company"],
-                params: z.object({ id: z.string() }),
+                params: baseIdParamSchema,
                 response: {
                     200: getCompanyResponseSchema,
                 },
             },
         },
         companyHandler.getCompanyById
+    );
+
+    fastify.patch(
+        CompanyRoutes.RUD,
+        {
+            preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
+            schema: {
+                tags: ["Company"],
+                params: baseIdParamSchema,
+                body: updateCompanyBodySchema,
+                response: {
+                    200: getCompanyResponseSchema,
+                },
+            },
+        },
+        companyHandler.updateCompany
+    );
+
+    fastify.delete(
+        CompanyRoutes.DELETE_PARTICIPANT,
+        {
+            preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
+            schema: {
+                tags: ["Company"],
+                body: deleteParticipantFromCompanyBodySchema,
+                response: {
+                    200: z.object({}),
+                },
+            },
+        },
+        companyHandler.deleteParticipant
     );
 };

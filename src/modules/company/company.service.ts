@@ -1,42 +1,54 @@
 import { CompanyService } from "./company.types.js";
-import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { CompanyRepository } from "@/database/repositories/company/company.repository.types.js";
+import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import {
+    companyDefaultSelect,
+    CompanyRepository,
+} from "@/database/repositories/company/company.repository.types.js";
 
 export const createcompanyService = (
-    companyRepository: CompanyRepository
+    companyRepository: CompanyRepository,
+    userRepository: UserRepository
 ): CompanyService => ({
     getCompanyById: async (id) => {
-        const company = await companyRepository.findUnique({
+        return await companyRepository.findUniqueOrFail({
             where: {
                 id,
             },
-            select: {
-                admin: {
-                    select: {
-                        email: true,
-                        fullName: true,
-                    },
-                },
-                users: {
-                    select: {
-                        email: true,
-                        fullName: true,
-                    },
-                },
-                id: true,
-                size: true,
-                identifier: true,
-                createdAt: true,
-                name: true,
+            select: companyDefaultSelect,
+        });
+    },
+
+    updateCompany: async (payload, companyId) => {
+        await companyRepository.findUniqueOrFail({
+            where: {
+                id: companyId,
             },
         });
 
-        if (!company) {
-            throw new NotFoundError("Company not found");
-        }
+        const updatedCompany = await companyRepository.update({
+            where: {
+                id: companyId,
+            },
+            data: {
+                ...payload,
+            },
+            select: companyDefaultSelect,
+        });
 
-        return company;
+        return updatedCompany;
+    },
+
+    deleteParticipant: async (userId) => {
+        await userRepository.findUniqueOrFail({
+            where: { id: userId },
+        });
+
+        await userRepository.delete({
+            where: { id: userId },
+        });
+
+        return {};
     },
 });
 

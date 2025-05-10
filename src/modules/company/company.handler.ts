@@ -8,9 +8,28 @@ export const createCompanyHandler = (
         getCompanyById: async (request, reply) => {
             const { id } = request.params;
 
-            const company = await companyService.getCompanyById(Number(id));
+            const company = await companyService.getCompanyById(id);
 
             reply.code(200).send(company);
+        },
+
+        updateCompany: async (request, reply) => {
+            const { id } = request.params;
+
+            const updatedCompany = await companyService.updateCompany(
+                request.body,
+                id
+            );
+
+            reply.code(200).send(updatedCompany);
+        },
+
+        deleteParticipant: async (request, reply) => {
+            const { userId } = request.body;
+
+            await companyService.deleteParticipant(userId);
+
+            reply.code(200).send();
         },
     };
 };

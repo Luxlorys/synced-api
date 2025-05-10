@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RoleEnum, userSchema } from "../user/user.schema.js";
+import { getUserResponseSchema, RoleEnum } from "../user/user.schema.js";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -27,7 +27,7 @@ export const loginResponseSchema = z.object({
         accessToken: z.string(),
         refreshToken: z.string(),
     }),
-    user: userSchema,
+    user: getUserResponseSchema,
 });
 
 export const updatePasswordBodySchema = z.object({

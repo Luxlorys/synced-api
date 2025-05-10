@@ -1,7 +1,9 @@
 import { UserService } from "./user.types.js";
-import { NotFoundError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import {
+    userDefaultSelect,
+    UserRepository,
+} from "@/database/repositories/user/user.repository.types.js";
 import {
     taskExtendedSelect,
     TaskRepository,
@@ -16,35 +18,36 @@ export const createuserService = (
             where: {
                 id,
             },
-            select: {
-                id: true,
-                email: true,
-                createdAt: true,
-                lastUpdated: true,
-                role: true,
-                company: true,
-                companyId: true,
-                fullName: true,
-                adminOfCompany: true,
-            },
+            select: userDefaultSelect,
         });
-
-        if (!user) {
-            throw new NotFoundError("User not found");
-        }
-
+        
         return user;
     },
-    deleteUserById: async (id: number) => {
-        const user = await userRepository.findUniqueOrFail({
+
+    updateUserById: async (payload, id) => {
+        await userRepository.findUniqueOrFail({
             where: {
                 id,
             },
         });
 
-        if (!user) {
-            throw new NotFoundError("User not found");
-        }
+        return await userRepository.update({
+            where: {
+                id,
+            },
+            data: {
+                ...payload,
+            },
+            select: userDefaultSelect,
+        });
+    },
+
+    deleteUserById: async (id: number) => {
+        await userRepository.findUniqueOrFail({
+            where: {
+                id,
+            },
+        });
 
         await userRepository.delete({
             where: {
@@ -56,6 +59,12 @@ export const createuserService = (
     },
 
     getUsersTasks: async (params, userId) => {
+        await userRepository.findUniqueOrFail({
+            where: {
+                id: userId,
+            },
+        });
+
         const tasks = await taskRepository.findMany({
             where: {
                 creatorId: userId,
