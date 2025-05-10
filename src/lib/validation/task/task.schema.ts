@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TaskStatusEnum = z.enum(["TODO", "IN_PROGRESS", "DONE"]);
+export const TaskStatusEnum = z.enum(["TODO", "IN_PROGRESS", "DONE", "BLOCKED"]);
 
 export const TaskPriorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"]);
 

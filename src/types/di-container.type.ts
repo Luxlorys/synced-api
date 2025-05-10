@@ -11,11 +11,18 @@ import {
     CompanyService,
 } from "@/modules/company/company.types.js";
 import { CompanyRepository } from "@/database/repositories/company/company.repository.types.js";
+import { TaskCommentHandler, TaskCommentService } from "@/modules/task-comment/task-comment.types.js";
+import { TaskCommentRepository } from "@/database/repositories/task-comment/task-comment.repository.types.js";
 
 export type Cradle = {
     log: FastifyBaseLogger;
     prisma: PrismaClient;
     config: EnvConfig;
+
+    taskCommentService: TaskCommentService;
+    taskCommentHandler: TaskCommentHandler;
+
+    taskCommentRepository: TaskCommentRepository;
 
     taskRepository: TaskRepository;
 
