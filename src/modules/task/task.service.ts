@@ -88,10 +88,16 @@ export const createtaskService = (
     getAllTasks: async (query, userId) => {
         const tasks = await taskRepository.findMany({
             orderBy: {
-                deadline: "asc"
+                deadline: "asc",
             },
             where: {
-                assignedToId: userId,
+                company: {
+                    users: {
+                        some: {
+                            id: userId,
+                        }
+                    }
+                },
                 title: {
                     startsWith: query.query,
                 },
