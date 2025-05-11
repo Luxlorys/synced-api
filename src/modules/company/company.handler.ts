@@ -31,6 +31,15 @@ export const createCompanyHandler = (
 
             reply.code(200).send();
         },
+
+        getCompanyParticipants: async (request, reply) => {
+            const { id } = request.params;
+            const query = request.query;
+
+            const participants = await companyService.getCompanyParticipants(query, id);
+
+            reply.status(200).send(participants);
+        },
     };
 };
 

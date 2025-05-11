@@ -26,3 +26,36 @@ export type UpdateCompanyBody = z.infer<typeof updateCompanyBodySchema>;
 export const deleteParticipantFromCompanyBodySchema = z.object({
     userId: z.number().int(),
 });
+
+export const getCompanyParticipantsQuery = z.object({
+    skip: z
+        .string()
+        .transform((val) => Number(val))
+        .optional()
+        .default("0"),
+    take: z
+        .string()
+        .transform((val) => Number(val))
+        .optional()
+        .default("10"),
+});
+
+export type GetCompanyParticipantsQuery = z.infer<typeof getCompanyParticipantsQuery>;
+
+const participantShortSchema = z.object({
+    id: z.number(),
+    fullName: z.string(),
+    email: z.string(),
+});
+
+export const getCompanyParticipantsResponseSchema = z.object({
+    participants: z.array(participantShortSchema),
+});
+
+export type GetCompanyParticipantsResponse = z.infer<typeof getCompanyParticipantsResponseSchema>;
+
+// participants: {
+//     id: number;
+//     fullName: string;
+//     email: string;
+// }[]

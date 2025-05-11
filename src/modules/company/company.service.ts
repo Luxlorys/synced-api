@@ -50,6 +50,25 @@ export const createcompanyService = (
 
         return {};
     },
+
+    getCompanyParticipants: async (query, companyId) => {
+        const participants = await userRepository.findMany({
+            where: {
+                companyId,
+            },
+            select: {
+                id: true,
+                fullName: true,
+                email: true,
+            },
+            skip: query.skip,
+            take: query.take,
+        });
+
+        return {
+            participants: participants,
+        };
+    },
 });
 
 addDIResolverName(createcompanyService, "companyService");

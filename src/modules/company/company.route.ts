@@ -4,6 +4,8 @@ import { CompanyHandler } from "./company.types.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     deleteParticipantFromCompanyBodySchema,
+    getCompanyParticipantsQuery,
+    getCompanyParticipantsResponseSchema,
     getCompanyResponseSchema,
     updateCompanyBodySchema,
 } from "@/lib/validation/company/company.schema.js";
@@ -11,6 +13,7 @@ import {
 enum CompanyRoutes {
     RUD = "/:id",
     DELETE_PARTICIPANT = "/delete-participant",
+    PARTICIPANTS = "/participants/:id",
 }
 
 export const createCompanyRoutes = (
@@ -61,5 +64,21 @@ export const createCompanyRoutes = (
             },
         },
         companyHandler.deleteParticipant
+    );
+
+    fastify.get(
+        CompanyRoutes.PARTICIPANTS,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Company"],
+                params: baseIdParamSchema,
+                querystring: getCompanyParticipantsQuery,
+                response: {
+                    200: getCompanyParticipantsResponseSchema,
+                },
+            },
+        },
+        companyHandler.getCompanyParticipants
     );
 };
