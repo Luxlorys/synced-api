@@ -67,7 +67,7 @@ export const createuserService = (
 
         const tasks = await taskRepository.findMany({
             where: {
-                creatorId: userId,
+                assignedToId: userId,
             },
             skip: params.skip,
             take: params.take,

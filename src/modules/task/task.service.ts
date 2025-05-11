@@ -40,8 +40,8 @@ export const createtaskService = (
                 estimatedTime: payload.estimatedTime,
                 priority: payload.priority,
                 status: payload.status,
-                creatorId: userId,
                 companyId: companyId,
+                assignedToId: payload.assignedToId,
             },
             select: taskExtendedSelect,
         });
@@ -61,7 +61,7 @@ export const createtaskService = (
                 id,
             },
             data: {
-                ...payload,
+                ...payload
             },
             select: taskExtendedSelect,
         });

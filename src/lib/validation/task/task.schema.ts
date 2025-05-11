@@ -12,20 +12,22 @@ const baseTaskSchema = z.object({
     estimatedTime: z.number().int(),
 });
 
-export const createTaskBodySchema = baseTaskSchema.extend({
+export const createTaskBodySchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    priority: TaskPriorityEnum,
+    status: TaskStatusEnum,
+    estimatedTime: z.number().int(),
+    assignedToId: z.number(),
     deadline: z.string().datetime(),
 });
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 
 export const getTaskResponseSchema = baseTaskSchema.extend({
-    creator: z.object({
+    assignedTo: z.object({
         fullName: z.string(),
         email: z.string().email(),
-    }),
-    company: z.object({
-        name: z.string(),
-        size: z.number(),
     }),
     id: z.number(),
     spentTime: z.number().nullable(),
@@ -65,6 +67,7 @@ export const updateTaskBodySchema = z.object({
     estimatedTime: z.number().int().optional(),
     deadline: z.string().datetime().optional(),
     spentTime: z.number().nullable().optional(),
+    assignedToId: z.number().optional(),
 });
 
 export type UpdateTaskBody = z.infer<typeof updateTaskBodySchema>;
