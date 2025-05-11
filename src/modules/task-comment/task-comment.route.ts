@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { TaskCommentHandler } from "./task-comment.types.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
@@ -46,5 +47,20 @@ export const createTaskCommentRoutes = (
             },
         },
         taskCommentHandler.getTaskComments
+    );
+
+    fastify.delete(
+        TaskCommentRoutes.RUD,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Task Comment"],
+                params: baseIdParamSchema,
+                response: {
+                    200: z.object({}),
+                },
+            },
+        },
+        taskCommentHandler.deleteTaskComment
     );
 };

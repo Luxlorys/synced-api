@@ -84,6 +84,27 @@ export const createtaskService = (
 
         return {};
     },
+
+    getAllTasks: async (query, userId) => {
+        const tasks = await taskRepository.findMany({
+            where: {
+                company: {
+                    users: {
+                        some: {
+                            id: userId,
+                        }
+                    }
+                }
+            },
+            skip: query.skip,
+            take: query.take,
+            select: taskExtendedSelect,
+        });
+
+        return {
+            tasks: tasks,
+        };
+    },
 });
 
 addDIResolverName(createtaskService, "taskService");

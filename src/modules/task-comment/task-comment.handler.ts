@@ -1,13 +1,24 @@
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
-import { TaskCommentHandler, TaskCommentService } from "./task-comment.types.js";
+import {
+    TaskCommentHandler,
+    TaskCommentService,
+} from "./task-comment.types.js";
 
-export const createTaskCommentHandler = (taskCommentService: TaskCommentService): TaskCommentHandler => {
+export const createTaskCommentHandler = (
+    taskCommentService: TaskCommentService
+): TaskCommentHandler => {
     return {
         createTask: async (request, reply) => {
-            const { data: { id }} = request.user;
+            const {
+                data: { id },
+            } = request.user;
+
             const payload = request.body;
 
-            const createdComment = await taskCommentService.createTask(payload, id);
+            const createdComment = await taskCommentService.createTask(
+                payload,
+                id
+            );
 
             reply.status(200).send(createdComment);
         },
@@ -16,9 +27,20 @@ export const createTaskCommentHandler = (taskCommentService: TaskCommentService)
             const { id } = request.params;
             const query = request.query;
 
-            const tasks = await taskCommentService.getAllTaskComments(query, id);
+            const tasks = await taskCommentService.getAllTaskComments(
+                query,
+                id
+            );
 
             reply.status(200).send(tasks);
+        },
+
+        deleteTaskComment: async (request, reply) => {
+            const { id } = request.params;
+
+            await taskCommentService.deleteTaskComment(id);
+
+            reply.status(200).send();
         },
     };
 };

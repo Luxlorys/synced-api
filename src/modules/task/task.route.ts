@@ -4,12 +4,14 @@ import { TaskHandler } from "./task.types.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     createTaskBodySchema,
+    getAllTasksQuerySchema,
+    getAllTasksSchema,
     getTaskResponseSchema,
     updateTaskBodySchema,
 } from "@/lib/validation/task/task.schema.js";
 
 enum TaskRoutes {
-    CREATE = "/",
+    CREATE_GETALL = "/",
     RUD = "/:id",
 }
 
@@ -33,7 +35,7 @@ export const createTaskRoutes = (
     );
 
     fastify.post(
-        TaskRoutes.CREATE,
+        TaskRoutes.CREATE_GETALL,
         {
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
@@ -75,5 +77,20 @@ export const createTaskRoutes = (
             },
         },
         taskHandler.deleteTask
+    );
+
+    fastify.get(
+        TaskRoutes.CREATE_GETALL,
+        {
+            preHandler: [fastify.authenticate],
+            schema: {
+                tags: ["Task"],
+                querystring: getAllTasksQuerySchema,
+                response: {
+                    200: getAllTasksSchema,
+                },
+            },
+        },
+        taskHandler.getAllTasks
     );
 };
