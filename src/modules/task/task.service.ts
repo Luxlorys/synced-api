@@ -61,7 +61,7 @@ export const createtaskService = (
                 id,
             },
             data: {
-                ...payload
+                ...payload,
             },
             select: taskExtendedSelect,
         });
@@ -75,7 +75,7 @@ export const createtaskService = (
                 id: taskId,
             },
         });
-        
+
         await taskRepository.delete({
             where: {
                 id: taskId,
@@ -87,14 +87,16 @@ export const createtaskService = (
 
     getAllTasks: async (query, userId) => {
         const tasks = await taskRepository.findMany({
+            orderBy: {
+                deadline: "asc"
+            },
             where: {
-                company: {
-                    users: {
-                        some: {
-                            id: userId,
-                        }
-                    }
-                }
+                assignedToId: userId,
+                title: {
+                    startsWith: query.query,
+                },
+                status: query.status,
+                priority: query.priority,
             },
             skip: query.skip,
             take: query.take,

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { BasePagination } from "@/lib/validation/mutual/mutual.schema.js";
 import {
-    GetCompanyParticipantsQuery,
     GetCompanyParticipantsResponse,
     GetCompanyResponse,
     UpdateCompanyBody,
@@ -28,7 +28,7 @@ export type CompanyHandler = {
     ) => Promise<void>;
     getCompanyParticipants: (
         request: FastifyRequest<{
-            Querystring: GetCompanyParticipantsQuery,
+            Querystring: BasePagination,
             Params: { id: number }
         }>,
         reply: FastifyReply,
@@ -39,5 +39,5 @@ export type CompanyService = {
     getCompanyById: (id: number) => Promise<GetCompanyResponse>;
     updateCompany: (payload: UpdateCompanyBody, companyId: number) => Promise<GetCompanyResponse>;
     deleteParticipant: (userId: number) => Promise<object>;
-    getCompanyParticipants: (query: GetCompanyParticipantsQuery, companyId: number) => Promise<GetCompanyParticipantsResponse>;
+    getCompanyParticipants: (query: BasePagination, companyId: number) => Promise<GetCompanyParticipantsResponse>;
 };

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { basePaginationScema } from "../mutual/mutual.schema.js";
 
 export const TaskStatusEnum = z.enum(["TODO", "IN_PROGRESS", "DONE", "BLOCKED"]);
 
@@ -44,21 +45,6 @@ export const getAllTasksSchema = z.object({
 
 export type GetAllTasksResponse = z.infer<typeof getAllTasksSchema>;
 
-export const getAllTasksQuerySchema = z.object({
-    skip: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("0"),
-    take: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("10"),
-});
-
-export type GetAllTasksQuery = z.infer<typeof getAllTasksQuerySchema>;
-
 export const updateTaskBodySchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
@@ -71,3 +57,11 @@ export const updateTaskBodySchema = z.object({
 });
 
 export type UpdateTaskBody = z.infer<typeof updateTaskBodySchema>;
+
+export const getTasksPagination = basePaginationScema.extend({
+    query: z.string().optional(),
+    status: TaskStatusEnum.optional(),
+    priority: TaskPriorityEnum.optional(),
+});
+
+export type GetTasksPagination = z.infer<typeof getTasksPagination>;

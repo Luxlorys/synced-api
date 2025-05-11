@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { CompanyHandler } from "./company.types.js";
+import { basePaginationScema } from "@/lib/validation/mutual/mutual.schema.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     deleteParticipantFromCompanyBodySchema,
-    getCompanyParticipantsQuery,
     getCompanyParticipantsResponseSchema,
     getCompanyResponseSchema,
     updateCompanyBodySchema,
@@ -73,7 +73,7 @@ export const createCompanyRoutes = (
             schema: {
                 tags: ["Company"],
                 params: baseIdParamSchema,
-                querystring: getCompanyParticipantsQuery,
+                querystring: basePaginationScema,
                 response: {
                     200: getCompanyParticipantsResponseSchema,
                 },

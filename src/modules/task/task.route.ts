@@ -4,9 +4,9 @@ import { TaskHandler } from "./task.types.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     createTaskBodySchema,
-    getAllTasksQuerySchema,
     getAllTasksSchema,
     getTaskResponseSchema,
+    getTasksPagination,
     updateTaskBodySchema,
 } from "@/lib/validation/task/task.schema.js";
 
@@ -85,7 +85,7 @@ export const createTaskRoutes = (
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["Task"],
-                querystring: getAllTasksQuerySchema,
+                querystring: getTasksPagination,
                 response: {
                     200: getAllTasksSchema,
                 },
