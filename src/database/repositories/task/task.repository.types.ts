@@ -22,7 +22,6 @@ export const taskDefaultSelect = {
 } satisfies Prisma.TaskSelect;
 
 export const taskExtendedSelect = {
-    company: true,
-    creator: true,
+    assignedTo: true,
     ...taskDefaultSelect,
 } satisfies Prisma.TaskSelect;

@@ -2,9 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { BaseIdParam } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     CreateTaskBody,
-    GetAllTasksQuery,
     GetAllTasksResponse,
     GetTaskResponse,
+    GetTasksPagination,
     UpdateTaskBody,
 } from "@/lib/validation/task/task.schema.js";
 
@@ -36,7 +36,7 @@ export type TaskHandler = {
     ) => Promise<void>;
     getAllTasks: (
         request: FastifyRequest<{
-            Querystring: GetAllTasksQuery
+            Querystring: GetTasksPagination
         }>,
         reply: FastifyReply,
     ) => Promise<void>;
@@ -53,5 +53,5 @@ export type TaskService = {
         userId: number
     ) => Promise<GetTaskResponse>;
     deleteTask: (taskId: number) => Promise<object>;
-    getAllTasks: (query: GetAllTasksQuery, userId: number) => Promise<GetAllTasksResponse>
+    getAllTasks: (query: GetTasksPagination, userId: number) => Promise<GetAllTasksResponse>
 };

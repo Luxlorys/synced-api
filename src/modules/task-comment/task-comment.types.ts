@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { BasePagination } from "@/lib/validation/mutual/mutual.schema.js";
 import { BaseIdParam } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     CreateTaskCommentBody,
     GetAllTaskComments,
-    GetTaskCommentsQuery,
     GetTaskCommentsResponse,
 } from "@/lib/validation/task-comment/task-comment.schema.js";
 
@@ -16,7 +16,7 @@ export type TaskCommentHandler = {
     ) => Promise<void>;
     getTaskComments: (
         request: FastifyRequest<{
-            Querystring: GetTaskCommentsQuery;
+            Querystring: BasePagination;
             Params: BaseIdParam;
         }>,
         reply: FastifyReply
@@ -35,7 +35,7 @@ export type TaskCommentService = {
         authorId: number
     ) => Promise<GetTaskCommentsResponse>;
     getAllTaskComments: (
-        query: GetTaskCommentsQuery,
+        query: BasePagination,
         taskId: number
     ) => Promise<GetAllTaskComments>;
     deleteTaskComment: (commentId: number) => Promise<object>;

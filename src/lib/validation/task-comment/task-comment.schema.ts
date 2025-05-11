@@ -1,20 +1,5 @@
 import { z } from "zod";
 
-export const getTaskCommentsQuerySchema = z.object({
-    skip: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("0"),
-    take: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("10"),
-});
-
-export type GetTaskCommentsQuery = z.infer<typeof getTaskCommentsQuerySchema>;
-
 export const getTaskCommentsResponseSchema = z.object({
     id: z.number(),
     text: z.string(),

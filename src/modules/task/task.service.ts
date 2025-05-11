@@ -40,8 +40,8 @@ export const createtaskService = (
                 estimatedTime: payload.estimatedTime,
                 priority: payload.priority,
                 status: payload.status,
-                creatorId: userId,
                 companyId: companyId,
+                assignedToId: payload.assignedToId,
             },
             select: taskExtendedSelect,
         });
@@ -75,7 +75,7 @@ export const createtaskService = (
                 id: taskId,
             },
         });
-        
+
         await taskRepository.delete({
             where: {
                 id: taskId,
@@ -87,6 +87,9 @@ export const createtaskService = (
 
     getAllTasks: async (query, userId) => {
         const tasks = await taskRepository.findMany({
+            orderBy: {
+                deadline: "asc",
+            },
             where: {
                 company: {
                     users: {
@@ -94,7 +97,12 @@ export const createtaskService = (
                             id: userId,
                         }
                     }
-                }
+                },
+                title: {
+                    startsWith: query.query,
+                },
+                status: query.status,
+                priority: query.priority,
             },
             skip: query.skip,
             take: query.take,

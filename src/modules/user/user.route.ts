@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { UserHandler } from "./user.types.js";
+import { basePaginationScema } from "@/lib/validation/mutual/mutual.schema.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
-import { getUserResponseSchema, getUsersTasksParamsSchema, getUsersTasksResponseSchema, updateUserBodySchema } from "@/lib/validation/user/user.schema.js";
+import { getUserResponseSchema, getUsersTasksResponseSchema, updateUserBodySchema } from "@/lib/validation/user/user.schema.js";
 
 enum UserRoutes {
     USER = "/:id",
@@ -66,7 +67,7 @@ export const createUserRoutes = (
             schema: {
                 tags: ["User"],
                 params: z.object({ id: z.string() }),
-                querystring: getUsersTasksParamsSchema,
+                querystring: basePaginationScema,
                 response: {
                     200: getUsersTasksResponseSchema,
                 },

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { basePaginationScema } from "../mutual/mutual.schema.js";
 
 export const TaskStatusEnum = z.enum(["TODO", "IN_PROGRESS", "DONE", "BLOCKED"]);
 
@@ -12,20 +13,22 @@ const baseTaskSchema = z.object({
     estimatedTime: z.number().int(),
 });
 
-export const createTaskBodySchema = baseTaskSchema.extend({
+export const createTaskBodySchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    priority: TaskPriorityEnum,
+    status: TaskStatusEnum,
+    estimatedTime: z.number().int(),
+    assignedToId: z.number(),
     deadline: z.string().datetime(),
 });
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 
 export const getTaskResponseSchema = baseTaskSchema.extend({
-    creator: z.object({
+    assignedTo: z.object({
         fullName: z.string(),
         email: z.string().email(),
-    }),
-    company: z.object({
-        name: z.string(),
-        size: z.number(),
     }),
     id: z.number(),
     spentTime: z.number().nullable(),
@@ -42,21 +45,6 @@ export const getAllTasksSchema = z.object({
 
 export type GetAllTasksResponse = z.infer<typeof getAllTasksSchema>;
 
-export const getAllTasksQuerySchema = z.object({
-    skip: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("0"),
-    take: z
-        .string()
-        .transform((val) => Number(val))
-        .optional()
-        .default("10"),
-});
-
-export type GetAllTasksQuery = z.infer<typeof getAllTasksQuerySchema>;
-
 export const updateTaskBodySchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
@@ -65,6 +53,15 @@ export const updateTaskBodySchema = z.object({
     estimatedTime: z.number().int().optional(),
     deadline: z.string().datetime().optional(),
     spentTime: z.number().nullable().optional(),
+    assignedToId: z.number().optional(),
 });
 
 export type UpdateTaskBody = z.infer<typeof updateTaskBodySchema>;
+
+export const getTasksPagination = basePaginationScema.extend({
+    query: z.string().optional(),
+    status: TaskStatusEnum.optional(),
+    priority: TaskPriorityEnum.optional(),
+});
+
+export type GetTasksPagination = z.infer<typeof getTasksPagination>;

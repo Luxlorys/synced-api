@@ -26,3 +26,15 @@ export type UpdateCompanyBody = z.infer<typeof updateCompanyBodySchema>;
 export const deleteParticipantFromCompanyBodySchema = z.object({
     userId: z.number().int(),
 });
+
+const participantShortSchema = z.object({
+    id: z.number(),
+    fullName: z.string(),
+    email: z.string(),
+});
+
+export const getCompanyParticipantsResponseSchema = z.object({
+    participants: z.array(participantShortSchema),
+});
+
+export type GetCompanyParticipantsResponse = z.infer<typeof getCompanyParticipantsResponseSchema>;

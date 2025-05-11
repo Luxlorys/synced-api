@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { TaskCommentHandler } from "./task-comment.types.js";
+import { basePaginationScema } from "@/lib/validation/mutual/mutual.schema.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
 import {
     createTaskCommentBodySchema,
     getAllTaskCommentsSchema,
-    getTaskCommentsQuerySchema,
     getTaskCommentsResponseSchema,
 } from "@/lib/validation/task-comment/task-comment.schema.js";
 
@@ -39,7 +39,7 @@ export const createTaskCommentRoutes = (
             preHandler: [fastify.authenticate],
             schema: {
                 tags: ["Task Comment"],
-                querystring: getTaskCommentsQuerySchema,
+                querystring: basePaginationScema,
                 params: baseIdParamSchema,
                 response: {
                     200: getAllTaskCommentsSchema,

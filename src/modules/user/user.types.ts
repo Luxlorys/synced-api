@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { BasePagination } from "@/lib/validation/mutual/mutual.schema.js";
 import {
     GetUserResponse,
-    GetUsersTasksParams,
     GetUsersTasksResponse,
     UpdateUserBody,
 } from "@/lib/validation/user/user.schema.js";
@@ -11,7 +11,7 @@ export type UserService = {
     deleteUserById: (id: number) => Promise<object>;
     updateUserById: (payload: UpdateUserBody, id: number) => Promise<GetUserResponse>;
     getUsersTasks: (
-        querystring: GetUsersTasksParams,
+        querystring: BasePagination,
         userId: number
     ) => Promise<GetUsersTasksResponse>;
 };
@@ -39,7 +39,7 @@ export type UserHandler = {
     getUsersTasks: (
         request: FastifyRequest<{
             Params: { id: number };
-            Querystring: GetUsersTasksParams;
+            Querystring: BasePagination;
         }>,
         reply: FastifyReply
     ) => Promise<void>;
