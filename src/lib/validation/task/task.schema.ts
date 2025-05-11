@@ -36,6 +36,27 @@ export const getTaskResponseSchema = baseTaskSchema.extend({
 
 export type GetTaskResponse = z.infer<typeof getTaskResponseSchema>;
 
+export const getAllTasksSchema = z.object({
+    tasks: z.array(getTaskResponseSchema)
+});
+
+export type GetAllTasksResponse = z.infer<typeof getAllTasksSchema>;
+
+export const getAllTasksQuerySchema = z.object({
+    skip: z
+        .string()
+        .transform((val) => Number(val))
+        .optional()
+        .default("0"),
+    take: z
+        .string()
+        .transform((val) => Number(val))
+        .optional()
+        .default("10"),
+});
+
+export type GetAllTasksQuery = z.infer<typeof getAllTasksQuerySchema>;
+
 export const updateTaskBodySchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),

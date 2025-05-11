@@ -42,6 +42,15 @@ export const createTaskHandler = (taskService: TaskService): TaskHandler => {
 
             reply.code(200).send();
         },
+
+        getAllTasks: async (request, reply) => {
+            const { data: { id }} = request.user;
+            const query = request.query;
+
+            const tasks = await taskService.getAllTasks(query, id);
+
+            reply.status(200).send(tasks);
+        },
     };
 };
 

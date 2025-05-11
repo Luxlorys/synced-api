@@ -35,6 +35,16 @@ export const createtaskCommentService = (
             comments: comments,
         };
     },
+
+    deleteTaskComment: async (commentId) => {
+        await taskCommentRepository.delete({
+            where: {
+                id: commentId,
+            },
+        });
+
+        return {};
+    },
 });
 
 addDIResolverName(createtaskCommentService, "taskCommentService");
