@@ -85,7 +85,7 @@ export const createtaskService = (
         return {};
     },
 
-    getAllTasks: async (query, userId) => {
+    getAllTasksWithinCompany: async (query, userId) => {
         const tasks = await taskRepository.findMany({
             orderBy: {
                 deadline: "asc",

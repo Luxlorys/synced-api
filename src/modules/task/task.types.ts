@@ -34,7 +34,7 @@ export type TaskHandler = {
         }>,
         reply: FastifyReply
     ) => Promise<void>;
-    getAllTasks: (
+    getAllTasksWithinCompany: (
         request: FastifyRequest<{
             Querystring: GetTasksPagination
         }>,
@@ -53,5 +53,5 @@ export type TaskService = {
         userId: number
     ) => Promise<GetTaskResponse>;
     deleteTask: (taskId: number) => Promise<object>;
-    getAllTasks: (query: GetTasksPagination, userId: number) => Promise<GetAllTasksResponse>
+    getAllTasksWithinCompany: (query: GetTasksPagination, userId: number) => Promise<GetAllTasksResponse>
 };

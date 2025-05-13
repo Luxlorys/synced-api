@@ -60,6 +60,7 @@ export const createcompanyService = (
                 id: true,
                 fullName: true,
                 email: true,
+                role: true,
             },
             skip: query.skip,
             take: query.take,

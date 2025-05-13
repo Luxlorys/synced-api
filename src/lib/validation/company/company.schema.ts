@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { userShortSchema } from "../user/user.schema.js";
 
 const userSchema = z.object({
     fullName: z.string(),
@@ -27,14 +28,8 @@ export const deleteParticipantFromCompanyBodySchema = z.object({
     userId: z.number().int(),
 });
 
-const participantShortSchema = z.object({
-    id: z.number(),
-    fullName: z.string(),
-    email: z.string(),
-});
-
 export const getCompanyParticipantsResponseSchema = z.object({
-    participants: z.array(participantShortSchema),
+    participants: z.array(userShortSchema),
 });
 
 export type GetCompanyParticipantsResponse = z.infer<typeof getCompanyParticipantsResponseSchema>;

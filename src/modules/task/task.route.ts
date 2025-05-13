@@ -56,6 +56,7 @@ export const createTaskRoutes = (
             schema: {
                 tags: ["Task"],
                 body: updateTaskBodySchema,
+                params: baseIdParamSchema,
                 response: {
                     200: getTaskResponseSchema,
                 },
@@ -91,6 +92,6 @@ export const createTaskRoutes = (
                 },
             },
         },
-        taskHandler.getAllTasks
+        taskHandler.getAllTasksWithinCompany
     );
 };
