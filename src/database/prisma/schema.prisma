@@ -78,8 +78,8 @@ model Task {
   estimatedTime Int
   spentTime     Int?
 
-  assignedToId Int
-  assignedTo   User @relation("UserTasks", fields: [assignedToId], references: [id], onDelete: Cascade)
+  assignedToId Int?
+  assignedTo   User? @relation("UserTasks", fields: [assignedToId], references: [id], onDelete: Cascade)
 
   companyId Int
   company   Company @relation("CompanyTasks", fields: [companyId], references: [id], onDelete: Cascade)

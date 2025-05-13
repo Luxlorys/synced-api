@@ -21,6 +21,13 @@ export const getUserResponseSchema = z.object({
 
 export type GetUserResponse = z.infer<typeof getUserResponseSchema>;
 
+export const userShortSchema = z.object({
+    id: z.number(),
+    fullName: z.string(),
+    email: z.string(),
+    role: RoleEnum,
+});
+
 export const updateUserBodySchema = z.object({
     email: z.string().email().optional(),
     fullName: z.string().optional(),

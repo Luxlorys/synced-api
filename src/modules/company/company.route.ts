@@ -13,7 +13,7 @@ import {
 enum CompanyRoutes {
     RUD = "/:id",
     DELETE_PARTICIPANT = "/delete-participant",
-    PARTICIPANTS = "/participants/:id",
+    PARTICIPANTS = "/:id/participants",
 }
 
 export const createCompanyRoutes = (

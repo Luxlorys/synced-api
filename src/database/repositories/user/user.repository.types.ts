@@ -35,13 +35,16 @@ export type UserRepository = BaseRepository<"user"> & {
     >;
 };
 
-export const userDefaultSelect = {
+export const userShortSelect = {
     id: true,
     createdAt: true,
     email: true,
     role: true,
     fullName: true,
     lastUpdated: true,
+} satisfies Prisma.UserSelect;
+
+export const userDefaultSelect = {
     company: {
         select: {
             name: true,
@@ -49,6 +52,7 @@ export const userDefaultSelect = {
             identifier: true,
         },
     },
+    ...userShortSelect,
 } satisfies Prisma.UserSelect;
 
 export const userSelectWithPassword = {
