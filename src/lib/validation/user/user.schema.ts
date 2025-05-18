@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getTaskResponseSchema } from "../task/task.schema.js";
 
-export const RoleEnum = z.enum(["Admin", "Participant"]);
+export const RoleEnum = z.enum(["ADMIN", "PARTICIPANT"]);
 
 export const getUserResponseSchema = z.object({
     id: z.number().int(),

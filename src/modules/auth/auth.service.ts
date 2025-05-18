@@ -48,7 +48,7 @@ export const createauthService = (
 
         const hashedPassword = await hashing.hashPassword(password);
 
-        if (role === "Admin") {
+        if (role === "ADMIN") {
             const companyIdentifier = generateRandomCode(4);
 
             const createdUser = await userRepository.createAdminUser({

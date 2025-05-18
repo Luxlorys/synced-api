@@ -39,7 +39,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                         email,
                         fullName,
                         password,
-                        role: "Admin",
+                        role: "ADMIN",
                     },
                 });
 
@@ -94,7 +94,7 @@ export const createUserRepository = (prisma: PrismaClient): UserRepository => {
                         email,
                         fullName,
                         password,
-                        role: "Participant",
+                        role: "PARTICIPANT",
                         companyId: companyId,
                     },
                     select: userDefaultSelect,

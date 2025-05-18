@@ -6,7 +6,7 @@ const configureAdminPermissionsCheck = async (fastify: FastifyInstance) => {
     fastify.decorate(
         "checkAdminPermissions",
         async (request: FastifyRequest) => {
-            if (request.user.data.role !== "Admin") {
+            if (request.user.data.role !== "ADMIN") {
                 throw new ForbiddenError(
                     "You do not have permissions to perform this request"
                 );

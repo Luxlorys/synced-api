@@ -8,8 +8,29 @@ datasource db {
 }
 
 enum Role {
-  Admin
-  Participant
+  ADMIN
+  PARTICIPANT
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  lastUpdated DateTime? @db.Timestamptz(6)
+  password    String
+  email       String    @unique
+  role        Role
+  fullName    String
+
+  companyId Int?
+  company   Company? @relation("CompanyUsers", fields: [companyId], references: [id], onDelete: Cascade)
+
+  adminOfCompany Company?       @relation("CompanyAdmin")
+  notifications  Notification[] @relation("UserNotification")
+  tasks          Task[]         @relation("UserTasks")
+  comments       TaskComment[]  @relation("CommentAuthor")
+
+  @@index([id])
+  @@map("user")
 }
 
 model Company {
@@ -17,7 +38,7 @@ model Company {
   name       String
   size       Int
   identifier String   @unique()
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
 
   adminId Int  @unique
   admin   User @relation("CompanyAdmin", fields: [adminId], references: [id], onDelete: Cascade)
@@ -29,28 +50,6 @@ model Company {
   @@index([id])
   @@index([identifier])
   @@map("company")
-}
-
-model User {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  lastUpdated DateTime? @map("last_update") @db.Timestamptz(6)
-  password    String
-  email       String    @unique
-  role        Role
-  fullName    String
-
-  companyId Int?
-  company   Company? @relation("CompanyUsers", fields: [companyId], references: [id], onDelete: Cascade)
-
-  adminOfCompany Company? @relation("CompanyAdmin")
-
-  tasks Task[] @relation("UserTasks")
-
-  comments TaskComment[] @relation("CommentAuthor")
-
-  @@index([id])
-  @@map("user")
 }
 
 enum TaskStatus {
@@ -68,8 +67,8 @@ enum TaskPriority {
 
 model Task {
   id            Int          @id @default(autoincrement())
-  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
-  lastUpdated   DateTime?    @map("last_update") @db.Timestamptz(6)
+  createdAt     DateTime     @default(now()) @db.Timestamptz(6)
+  lastUpdated   DateTime?    @db.Timestamptz(6)
   title         String
   description   String
   status        TaskStatus
@@ -94,9 +93,9 @@ model Task {
 }
 
 model TaskComment {
-  id   Int    @id @default(autoincrement())
-  text String
-  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
 
   taskId Int
   task   Task @relation("TaskComments", fields: [taskId], references: [id], onDelete: Cascade)
@@ -105,4 +104,32 @@ model TaskComment {
   author   User @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("taskComment")
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  MISSED_DEADLINE
+  TASK_COMMENTED
+}
+
+enum NotificationStatus {
+  VIEWED
+  UNVIEWED
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  lastUpdated DateTime? @db.Timestamptz(6)
+
+  title              String
+  data               Json
+  notificationType   NotificationType
+  notificationStatus NotificationStatus
+
+  userId Int
+  user   User @relation("UserNotification", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification")
 }
