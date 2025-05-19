@@ -9,7 +9,7 @@ import {
     TaskRepository,
 } from "@/database/repositories/task/task.repository.types.js";
 
-export const createuserService = (
+export const createUserService = (
     userRepository: UserRepository,
     taskRepository: TaskRepository
 ): UserService => ({
@@ -80,4 +80,4 @@ export const createuserService = (
     },
 });
 
-addDIResolverName(createuserService, "userService");
+addDIResolverName(createUserService, "userService");

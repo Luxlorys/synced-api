@@ -123,7 +123,6 @@ model Notification {
   createdAt   DateTime  @default(now()) @db.Timestamptz(6)
   lastUpdated DateTime? @db.Timestamptz(6)
 
-  title              String
   data               Json
   notificationType   NotificationType
   notificationStatus NotificationStatus

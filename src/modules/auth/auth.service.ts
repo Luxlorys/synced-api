@@ -10,7 +10,7 @@ import {
     UnauthorizedError,
 } from "@/lib/errors/errors.js";
 
-export const createauthService = (
+export const createAuthService = (
     userRepository: UserRepository,
     companyRepository: CompanyRepository
 ): AuthService => ({
@@ -117,4 +117,4 @@ export const createauthService = (
     },
 });
 
-addDIResolverName(createauthService, "authService");
+addDIResolverName(createAuthService, "authService");
