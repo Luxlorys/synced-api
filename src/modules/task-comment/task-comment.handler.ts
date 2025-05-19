@@ -15,7 +15,7 @@ export const createTaskCommentHandler = (
 
             const payload = request.body;
 
-            const createdComment = await taskCommentService.createTask(
+            const createdComment = await taskCommentService.createTaskComment(
                 payload,
                 id
             );

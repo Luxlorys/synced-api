@@ -13,11 +13,19 @@ import {
 import { CompanyRepository } from "@/database/repositories/company/company.repository.types.js";
 import { TaskCommentHandler, TaskCommentService } from "@/modules/task-comment/task-comment.types.js";
 import { TaskCommentRepository } from "@/database/repositories/task-comment/task-comment.repository.types.js";
+import { NotificationRepository } from "@/database/repositories/notification/notification.repository.types.js";
+import { NotificationHandler, NotificationOrchestrationService, NotificationService } from "@/modules/notification/notification.types.js";
 
 export type Cradle = {
     log: FastifyBaseLogger;
     prisma: PrismaClient;
     config: EnvConfig;
+
+    notificationRepository: NotificationRepository;
+
+    notificationService: NotificationService;
+    notificationHandler: NotificationHandler;
+    notificationOtchestrationService: NotificationOrchestrationService;
 
     taskCommentService: TaskCommentService;
     taskCommentHandler: TaskCommentHandler;

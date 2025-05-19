@@ -6,7 +6,7 @@ import {
     CompanyRepository,
 } from "@/database/repositories/company/company.repository.types.js";
 
-export const createcompanyService = (
+export const createCompanyService = (
     companyRepository: CompanyRepository,
     userRepository: UserRepository
 ): CompanyService => ({
@@ -72,4 +72,4 @@ export const createcompanyService = (
     },
 });
 
-addDIResolverName(createcompanyService, "companyService");
+addDIResolverName(createCompanyService, "companyService");

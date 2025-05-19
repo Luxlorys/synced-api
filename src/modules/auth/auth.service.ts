@@ -10,7 +10,7 @@ import {
     UnauthorizedError,
 } from "@/lib/errors/errors.js";
 
-export const createauthService = (
+export const createAuthService = (
     userRepository: UserRepository,
     companyRepository: CompanyRepository
 ): AuthService => ({
@@ -48,7 +48,7 @@ export const createauthService = (
 
         const hashedPassword = await hashing.hashPassword(password);
 
-        if (role === "Admin") {
+        if (role === "ADMIN") {
             const companyIdentifier = generateRandomCode(4);
 
             const createdUser = await userRepository.createAdminUser({
@@ -117,4 +117,4 @@ export const createauthService = (
     },
 });
 
-addDIResolverName(createauthService, "authService");
+addDIResolverName(createAuthService, "authService");

@@ -30,7 +30,7 @@ export type TaskCommentHandler = {
 };
 
 export type TaskCommentService = {
-    createTask: (
+    createTaskComment: (
         payload: CreateTaskCommentBody,
         authorId: number
     ) => Promise<GetTaskCommentsResponse>;

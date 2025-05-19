@@ -1,15 +1,18 @@
 import { TaskService } from "./task.types.js";
+import { getNowUTCDate } from "@/lib/helpers/Dates.js";
 import { ForbiddenError } from "@/lib/errors/errors.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { UserRepository } from "@/database/repositories/user/user.repository.types.js";
+import { NotificationOrchestrationService } from "../notification/notification.types.js";
 import {
     taskExtendedSelect,
     TaskRepository,
 } from "@/database/repositories/task/task.repository.types.js";
 
-export const createtaskService = (
+export const createTaskService = (
     taskRepository: TaskRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    notificationOtchestrationService: NotificationOrchestrationService
 ): TaskService => ({
     getTaskById: async (id) => {
         const task = await taskRepository.findUniqueOrFail({
@@ -46,6 +49,18 @@ export const createtaskService = (
             select: taskExtendedSelect,
         });
 
+        if (payload.assignedToId) {
+            notificationOtchestrationService.createTaskAssignedNotification({
+                assignerId: payload.assignedToId,
+                data: {
+                    deadline: createdTask.deadline,
+                    priority: createdTask.priority,
+                    taskTitle: createdTask.title,
+                    taskId: createdTask.id,
+                },
+            });
+        }
+
         return createdTask;
     },
 
@@ -62,9 +77,22 @@ export const createtaskService = (
             },
             data: {
                 ...payload,
+                lastUpdated: getNowUTCDate(),
             },
             select: taskExtendedSelect,
         });
+
+        if (updatedTask.assignedTo?.id) {
+            notificationOtchestrationService.createUpdatedTaskNotification({
+                assignerId: updatedTask.assignedTo.id,
+                data: {
+                    taskId: id,
+                    deadline: updatedTask.deadline,
+                    priority: updatedTask.priority,
+                    taskTitle: updatedTask.title,
+                },
+            });
+        }
 
         return updatedTask;
     },
@@ -95,8 +123,8 @@ export const createtaskService = (
                     users: {
                         some: {
                             id: userId,
-                        }
-                    }
+                        },
+                    },
                 },
                 title: {
                     startsWith: query.query,
@@ -115,4 +143,4 @@ export const createtaskService = (
     },
 });
 
-addDIResolverName(createtaskService, "taskService");
+addDIResolverName(createTaskService, "taskService");

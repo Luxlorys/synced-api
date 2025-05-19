@@ -46,9 +46,9 @@ import { addDIResolverName } from "@/lib/awilix/awilix.js";
 
 export type ${namePascal}Service = {};
 
-export const create${nameCamel}Service = (): ${namePascal}Service => ({});
+export const create${namePascal}Service = (): ${namePascal}Service => ({});
 
-addDIResolverName(create${nameCamel}Service, "${nameCamel}Service");
+addDIResolverName(create${namePascal}Service, "${nameCamel}Service");
 
   `.trim(),
 };

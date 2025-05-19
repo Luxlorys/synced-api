@@ -1,4 +1,5 @@
 import { UserService } from "./user.types.js";
+import { getNowJSDate } from "@/lib/helpers/Dates.js";
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import {
     userDefaultSelect,
@@ -9,7 +10,7 @@ import {
     TaskRepository,
 } from "@/database/repositories/task/task.repository.types.js";
 
-export const createuserService = (
+export const createUserService = (
     userRepository: UserRepository,
     taskRepository: TaskRepository
 ): UserService => ({
@@ -37,6 +38,7 @@ export const createuserService = (
             },
             data: {
                 ...payload,
+                lastUpdated: getNowJSDate(),
             },
             select: userDefaultSelect,
         });
@@ -80,4 +82,4 @@ export const createuserService = (
     },
 });
 
-addDIResolverName(createuserService, "userService");
+addDIResolverName(createUserService, "userService");
