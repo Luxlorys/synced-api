@@ -5,12 +5,17 @@ import { GetAllNotificationsResponse } from "@/lib/validation/notification/notif
 export type NotificationHandler = {
     getAllNotifications: (
         request: FastifyRequest,
-        reply: FastifyReply
-    ) => Promise<void>
+        reply: FastifyReply,
+    ) => Promise<void>;
+    updateStatus: (
+        request: FastifyRequest,
+        reply: FastifyReply,
+    ) => Promise<void>;
 };
 
 export type NotificationService = {
     getAllNotifications: (userId: number) => Promise<GetAllNotificationsResponse>;
+    updateStatus: (userId: number) => Promise<void>;
 };
 
 export type NotificationOrchestrationService = {

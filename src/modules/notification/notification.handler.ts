@@ -10,6 +10,14 @@ export const createNotificationHandler = (notificationService: NotificationServi
 
             reply.status(200).send(notifications);
         },
+
+        updateStatus: async (request, reply) => {
+            const { data: { id }} = request.user;
+
+            await notificationService.updateStatus(id);
+
+            reply.status(200).send();
+        },
     };
 };
 

@@ -20,6 +20,18 @@ export const createnotificationService = (notificationRepository: NotificationRe
             notifications: adaptedNotifications
         };
     },
+
+    updateStatus: async (userId) => {
+        await notificationRepository.updateMany({
+            where: {
+                notificationStatus: "UNVIEWED",
+                userId,
+            },
+            data: {
+                notificationStatus: "VIEWED"
+            }
+        });
+    },
 });
 
 addDIResolverName(createnotificationService, "notificationService");
