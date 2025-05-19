@@ -11,10 +11,10 @@ export const createnotificationService = (notificationRepository: NotificationRe
             select: notificationDefaultSelect,
         });
 
-        const adaptedNotifications = notifications.map(nt => ({
-            ...nt,
-            data: JSON.parse(nt.data as string),
-        }));
+        const adaptedNotifications = notifications.map(notification => ({
+            ...notification,
+            data: JSON.parse(notification.data as string),
+        }));        
 
         return {
             notifications: adaptedNotifications

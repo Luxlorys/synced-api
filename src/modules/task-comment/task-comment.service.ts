@@ -1,5 +1,6 @@
 import { addDIResolverName } from "@/lib/awilix/awilix.js";
 import { TaskCommentService } from "./task-comment.types.js";
+import { TaskRepository } from "@/database/repositories/task/task.repository.types.js";
 import { NotificationOrchestrationService } from "../notification/notification.types.js";
 import {
     taskCommentDefaultSelect,
@@ -9,8 +10,14 @@ import {
 export const createTaskCommentService = (
     taskCommentRepository: TaskCommentRepository,
     notificationOtchestrationService: NotificationOrchestrationService,
+    taskRepository: TaskRepository
 ): TaskCommentService => ({
     createTaskComment: async (payload, authorId) => {
+        const { assignedToId } = await taskRepository.findUniqueOrFail({
+            where: { id: payload.taskId },
+            select: { assignedToId: true },
+        });
+
         const comment = await taskCommentRepository.create({
             data: {
                 text: payload.text,
@@ -20,17 +27,15 @@ export const createTaskCommentService = (
             select: taskCommentDefaultSelect,
         });
 
-        try {
-            await notificationOtchestrationService.createTaskCommentedNotification({
-                assignerId: comment.author.id,
+        if (assignedToId) {
+            notificationOtchestrationService.createTaskCommentedNotification({
+                assignerId: assignedToId,
                 data: {
                     authorFullName: comment.author.fullName,
                     comment: comment.text,
                     taskId: payload.taskId,
                 },
             });
-        } catch (e) {
-            console.error("Failed to create notification", e);
         }
 
         return comment;

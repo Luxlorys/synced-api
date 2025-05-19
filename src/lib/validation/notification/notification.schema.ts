@@ -12,7 +12,7 @@ const notificationTypeEnum = z.enum([
 const notificationSchema = z.object({
     id: z.number(),
     createdAt: z.date(),
-    data: z.object({}),
+    data: z.record(z.unknown()),
     notificationType: notificationTypeEnum,
     notificationStatus: notificationStatusEnum,
 });

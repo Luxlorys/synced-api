@@ -12,7 +12,7 @@ import {
 export const createTaskService = (
     taskRepository: TaskRepository,
     userRepository: UserRepository,
-    notificationOtchestrationService: NotificationOrchestrationService,
+    notificationOtchestrationService: NotificationOrchestrationService
 ): TaskService => ({
     getTaskById: async (id) => {
         const task = await taskRepository.findUniqueOrFail({
@@ -50,19 +50,15 @@ export const createTaskService = (
         });
 
         if (payload.assignedToId) {
-            try {
-                await notificationOtchestrationService.createTaskAssignedNotification({
-                    assignerId: payload.assignedToId,
-                    data: {
-                        deadline: createdTask.deadline,
-                        priority: createdTask.priority,
-                        taskTitle: createdTask.title,
-                        taskId: createdTask.id,
-                    }
-                });
-            } catch (e) {
-                console.error("Failed to create notification", e);
-            }
+            notificationOtchestrationService.createTaskAssignedNotification({
+                assignerId: payload.assignedToId,
+                data: {
+                    deadline: createdTask.deadline,
+                    priority: createdTask.priority,
+                    taskTitle: createdTask.title,
+                    taskId: createdTask.id,
+                },
+            });
         }
 
         return createdTask;
@@ -87,19 +83,15 @@ export const createTaskService = (
         });
 
         if (updatedTask.assignedTo?.id) {
-            try {
-                await notificationOtchestrationService.createUpdatedTaskNotification({
-                    assignerId: updatedTask.assignedTo.id,
-                    data: {
-                        taskId: id,
-                        deadline: updatedTask.deadline,
-                        priority: updatedTask.priority,
-                        taskTitle: updatedTask.title,
-                    }
-                });
-            } catch (e) {
-                console.error("Failed to create notification", e);
-            }
+            notificationOtchestrationService.createUpdatedTaskNotification({
+                assignerId: updatedTask.assignedTo.id,
+                data: {
+                    taskId: id,
+                    deadline: updatedTask.deadline,
+                    priority: updatedTask.priority,
+                    taskTitle: updatedTask.title,
+                },
+            });
         }
 
         return updatedTask;
@@ -131,8 +123,8 @@ export const createTaskService = (
                     users: {
                         some: {
                             id: userId,
-                        }
-                    }
+                        },
+                    },
                 },
                 title: {
                     startsWith: query.query,
