@@ -16,6 +16,7 @@ export type NotificationHandler = {
 export type NotificationService = {
     getAllNotifications: (userId: number) => Promise<GetAllNotificationsResponse>;
     updateStatus: (userId: number) => Promise<void>;
+    deleteViewedNotifications: () => Promise<void>;
 };
 
 export type NotificationOrchestrationService = {
