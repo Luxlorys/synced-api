@@ -41,7 +41,10 @@ export const getDateFormat = (date: string) => {
 
 export const isAfterCurrentTime = (date: string) =>
     dayjs(date)
-        .isAfter(dayjs(), "minute");
+        .isAfter(dayjs());
+
+export const isAfterCurrentTimeUTC = (date: Date | string) =>
+    dayjs(date).isAfter(dayjs().utc());
 
 export const isSelectedDayAfterLastCheckin = (
     selectedDay: string,

@@ -25,9 +25,7 @@ export type NotificationOrchestrationService = {
     createUpdatedTaskNotification: (
         payload: UpdateTaskNotificationPayload
     ) => Promise<void>;
-    createMissedDeadlineNotification: (
-        payload: MissedDeadlineNotificationPayload
-    ) => Promise<void>;
+    createMissedDeadlineNotification: () => Promise<void>;
     createTaskCommentedNotification: (
         payload: TaskCommentedNotificationPayload
     ) => Promise<void>;
