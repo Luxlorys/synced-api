@@ -1,6 +1,7 @@
 /// <reference types="./types/index.d.ts" />
 import closeWithGrace from "close-with-grace";
 import { configureServer } from "./server.js";
+import { scheduleMissedDeadlineNotificationJob } from "./modules/notification/notifications-cron.jobs.js";
 
 const main = async () => {
     const fastify = await configureServer();
@@ -9,6 +10,8 @@ const main = async () => {
         port: fastify.config.PORT,
         host: fastify.config.HOST,
     });
+
+    scheduleMissedDeadlineNotificationJob(fastify);
 
     fastify.log.info(`Documentation available at ${address}/api/docs/`);
 
