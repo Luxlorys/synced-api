@@ -10,17 +10,12 @@ import {
     updateTaskBodySchema,
 } from "@/lib/validation/task/task.schema.js";
 
-enum TaskRoutes {
-    CREATE_GETALL = "/",
-    RUD = "/:id",
-}
-
 export const createTaskRoutes = (
     fastify: FastifyInstance,
     taskHandler: TaskHandler
 ) => {
     fastify.get(
-        TaskRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -35,7 +30,7 @@ export const createTaskRoutes = (
     );
 
     fastify.post(
-        TaskRoutes.CREATE_GETALL,
+        "/",
         {
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
@@ -50,7 +45,7 @@ export const createTaskRoutes = (
     );
 
     fastify.patch(
-        TaskRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -66,7 +61,7 @@ export const createTaskRoutes = (
     );
 
     fastify.delete(
-        TaskRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
@@ -81,7 +76,7 @@ export const createTaskRoutes = (
     );
 
     fastify.get(
-        TaskRoutes.CREATE_GETALL,
+        "/",
         {
             preHandler: [fastify.authenticate],
             schema: {

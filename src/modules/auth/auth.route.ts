@@ -8,18 +8,12 @@ import {
     updatePasswordBodySchema,
 } from "@/lib/validation/auth/auth.schema.js";
 
-enum authRoutes {
-    LOGIN = "/sign-in",
-    SIGN_UP = "/sign-up",
-    UPDATE_PASSWORD = "/update-password",
-}
-
 export const createAuthRoutes = (
     fastify: FastifyInstance,
     authHandler: AuthHandler
 ) => {
     fastify.post(
-        authRoutes.LOGIN,
+        "/sign-in",
         {
             schema: {
                 tags: ["Auth"],
@@ -33,7 +27,7 @@ export const createAuthRoutes = (
     );
 
     fastify.post(
-        authRoutes.SIGN_UP,
+        "/sign-up",
         {
             schema: {
                 tags: ["Auth"],
@@ -47,7 +41,7 @@ export const createAuthRoutes = (
     );
 
     fastify.patch(
-        authRoutes.UPDATE_PASSWORD,
+        "/update-password",
         {
             preHandler: [fastify.authenticate],
             schema: {
