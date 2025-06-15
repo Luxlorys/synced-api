@@ -23,23 +23,23 @@ jobs:
       - name: Configure gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: YOUR_PROJECT_ID
+          project_id: extreme-lodge-461611-f2
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker REGION-docker.pkg.dev
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Build and push Docker image
         run: |
-          IMAGE="REGION-docker.pkg.dev/YOUR_PROJECT_ID/REPO_NAME/IMAGE_NAME"
+          IMAGE="us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api"
           docker build -t "$IMAGE:$GITHUB_SHA" .
           docker push "$IMAGE:$GITHUB_SHA"
 
       - name: Deploy to Cloud Run
   run: |
-    gcloud run deploy SERVICE_NAME \
-      --image=REGION-docker.pkg.dev/YOUR_PROJECT_ID/REPO_NAME/IMAGE_NAME:$GITHUB_SHA \
+    gcloud run deploy synced-api \
+      --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
       --platform=managed \
-      --region=REGION \
+      --region=us-central1 \
       --allow-unauthenticated \
       --set-env-vars=\
         DATABASE_URL=${{ secrets.DATABASE_URL }},\
