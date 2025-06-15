@@ -41,5 +41,5 @@ jobs:
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
-            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},NODE_ENV=development,APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},APPLICATION_URL=http://0.0.0.0:3001,PORT=8080"
+            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},NODE_ENV=development,APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},APPLICATION_URL=http://0.0.0.0:3001,PORT=3001"
 
