@@ -13,26 +13,18 @@ export const generateModule = (nameCamel, namePascal, nameKebab) => {
     fs.mkdirSync(modulePath, { recursive: true });
     console.log(`📁 Created folder: ${modulePath}`);
 
-    const routeContent = templates["route"](namePascal, nameCamel, nameKebab);
+    const routeContent = templates.route(namePascal, nameCamel, nameKebab);
     const routeFilePath = path.join(modulePath, `${nameKebab}.route.ts`);
     fs.writeFileSync(routeFilePath, routeContent);
 
-    const handlerContent = templates["handler"](
-        namePascal,
-        nameCamel,
-        nameKebab
-    );
+    const handlerContent = templates.handler(namePascal, nameCamel, nameKebab);
 
     const handlerFilePath = path.join(modulePath, `${nameKebab}.handler.ts`);
     fs.writeFileSync(handlerFilePath, handlerContent);
 
     const serviceFilePath = path.join(modulePath, `${nameKebab}.service.ts`);
 
-    const serviceContent = templates["service"](
-        namePascal,
-        nameCamel,
-        nameKebab
-    );
+    const serviceContent = templates.service(namePascal, nameCamel, nameKebab);
 
     fs.writeFileSync(serviceFilePath, serviceContent);
 

@@ -32,6 +32,14 @@ export const createnotificationService = (notificationRepository: NotificationRe
             }
         });
     },
+
+    deleteViewedNotifications: async () => {
+        await notificationRepository.deleteMany({
+            where: {
+                notificationStatus: "VIEWED",
+            }
+        });
+    }
 });
 
 addDIResolverName(createnotificationService, "notificationService");

@@ -9,17 +9,12 @@ import {
     getTaskCommentsResponseSchema,
 } from "@/lib/validation/task-comment/task-comment.schema.js";
 
-enum TaskCommentRoutes {
-    CREATE = "/",
-    RUD = "/:id",
-}
-
 export const createTaskCommentRoutes = (
     fastify: FastifyInstance,
     taskCommentHandler: TaskCommentHandler
 ) => {
     fastify.post(
-        TaskCommentRoutes.CREATE,
+        "/",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -34,7 +29,7 @@ export const createTaskCommentRoutes = (
     );
 
     fastify.get(
-        TaskCommentRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -50,7 +45,7 @@ export const createTaskCommentRoutes = (
     );
 
     fastify.delete(
-        TaskCommentRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {

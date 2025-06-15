@@ -3,19 +3,18 @@ import { FastifyInstance } from "fastify";
 import { UserHandler } from "./user.types.js";
 import { basePaginationScema } from "@/lib/validation/mutual/mutual.schema.js";
 import { baseIdParamSchema } from "@/lib/validation/base-params/base-params.schema.js";
-import { getUserResponseSchema, getUsersTasksResponseSchema, updateUserBodySchema } from "@/lib/validation/user/user.schema.js";
-
-enum UserRoutes {
-    USER = "/:id",
-    USER_TASKS = "/tasks/:id"
-}
+import {
+    getUserResponseSchema,
+    getUsersTasksResponseSchema,
+    updateUserBodySchema,
+} from "@/lib/validation/user/user.schema.js";
 
 export const createUserRoutes = (
     fastify: FastifyInstance,
     userHandler: UserHandler
 ) => {
     fastify.get(
-        UserRoutes.USER,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -30,7 +29,7 @@ export const createUserRoutes = (
     );
 
     fastify.patch(
-        UserRoutes.USER,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -46,7 +45,7 @@ export const createUserRoutes = (
     );
 
     fastify.delete(
-        UserRoutes.USER,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -61,7 +60,7 @@ export const createUserRoutes = (
     );
 
     fastify.get(
-        UserRoutes.USER_TASKS,
+        "/tasks/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {

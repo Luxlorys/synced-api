@@ -10,18 +10,12 @@ import {
     updateCompanyBodySchema,
 } from "@/lib/validation/company/company.schema.js";
 
-enum CompanyRoutes {
-    RUD = "/:id",
-    DELETE_PARTICIPANT = "/delete-participant",
-    PARTICIPANTS = "/:id/participants",
-}
-
 export const createCompanyRoutes = (
     fastify: FastifyInstance,
     companyHandler: CompanyHandler
 ) => {
     fastify.get(
-        CompanyRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
@@ -36,7 +30,7 @@ export const createCompanyRoutes = (
     );
 
     fastify.patch(
-        CompanyRoutes.RUD,
+        "/:id",
         {
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
@@ -52,7 +46,7 @@ export const createCompanyRoutes = (
     );
 
     fastify.delete(
-        CompanyRoutes.DELETE_PARTICIPANT,
+        "/delete-participant",
         {
             preHandler: [fastify.authenticate, fastify.checkAdminPermissions],
             schema: {
@@ -67,7 +61,7 @@ export const createCompanyRoutes = (
     );
 
     fastify.get(
-        CompanyRoutes.PARTICIPANTS,
+        "/:id/participants",
         {
             preHandler: [fastify.authenticate],
             schema: {

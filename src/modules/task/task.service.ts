@@ -127,7 +127,7 @@ export const createTaskService = (
                     },
                 },
                 title: {
-                    startsWith: query.query,
+                    contains: query.query,
                 },
                 status: query.status,
                 priority: query.priority,
