@@ -1,0 +1,50 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main] # or your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Configure gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: extreme-lodge-461611-f2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE="us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api"
+          docker build -t "$IMAGE:$GITHUB_SHA" .
+          docker push "$IMAGE:$GITHUB_SHA"
+
+      - name: Deploy to Cloud Run
+  run: |
+    gcloud run deploy synced-api \
+      --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
+      --platform=managed \
+      --region=us-central1 \
+      --allow-unauthenticated \
+      --set-env-vars=\
+        DATABASE_URL=${{ secrets.DATABASE_URL }},\
+        NODE_ENV=development,\
+        APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},\
+        APPLICATION_URL=http://0.0.0.0:3001,\
+        PORT=8080
+
