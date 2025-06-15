@@ -35,11 +35,11 @@ jobs:
           docker push "$IMAGE:$GITHUB_SHA"
 
       - name: Deploy to Cloud Run
-  run: |
-    gcloud run deploy synced-api \
-      --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
-      --platform=managed \
-      --region=us-central1 \
-      --allow-unauthenticated \
-      --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},NODE_ENV=development,APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},APPLICATION_URL=http://0.0.0.0:3001,PORT=8080"
+        run: |
+          gcloud run deploy synced-api \
+            --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
+            --platform=managed \
+            --region=us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},NODE_ENV=development,APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},APPLICATION_URL=http://0.0.0.0:3001,PORT=8080"
 
