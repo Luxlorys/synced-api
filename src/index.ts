@@ -10,7 +10,7 @@ const main = async () => {
     const fastify = await configureServer();
 
     const address = await fastify.listen({
-        port: fastify.config.PORT,
+        port: fastify.config.RUNNING_PORT,
         host: fastify.config.HOST,
     });
 
