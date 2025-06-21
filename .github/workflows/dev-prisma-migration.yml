@@ -18,11 +18,12 @@ jobs:
           curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.17.1/cloud-sql-proxy.linux.amd64
           chmod +x cloud-sql-proxy
 
+      - name: Write service account key to file
+        run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > service-account.json
+
       - name: Start Cloud SQL Auth Proxy
         run: |
-          ./cloud-sql-proxy extreme-lodge-461611-f2:us-central1:synced
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          ./cloud-sql-proxy extreme-lodge-461611-f2:us-central1:synced --credentials-file=service-account.json &
 
       - uses: actions/checkout@v3
 
