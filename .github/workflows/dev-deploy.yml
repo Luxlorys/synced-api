@@ -61,4 +61,4 @@ jobs:
             --vpc-connector=${VPC_CONNECTOR} \
             --vpc-egress=all \
             --allow-unauthenticated \
-            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }}"
+            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},NODE_ENV=development,APPLICATION_URL=http://0.0.0.0:3001,DOCS_PASSWORD=
