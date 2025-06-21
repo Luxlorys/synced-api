@@ -8,6 +8,10 @@ jobs:
   db-migration:
     runs-on: ubuntu-latest
 
+    strategy:
+            matrix:
+                node-version: [22.x]
+
     steps:
       - name: Download Cloud SQL Auth Proxy
         run: |
@@ -21,13 +25,16 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
+      - uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+            node-version: ${{ matrix.node-version }}
+            cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run DB Migrations
         env:
