@@ -2,7 +2,7 @@ name: Deploy to Cloud Run
 
 on:
   push:
-    branches: [main] # or your deployment branch
+    branches: [main]
 
 jobs:
   deploy:
@@ -28,20 +28,37 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Build and push Docker image
+      - name: Build, tag, and push Docker image
         run: |
-          IMAGE="us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api"
-          docker build -t "$IMAGE:$GITHUB_SHA" .
-          docker push "$IMAGE:$GITHUB_SHA"
+          IMAGE_NAME="synced-api"
+          REGION="us-central1"
+          PROJECT_ID="extreme-lodge-461611-f2"
+          REPOSITORY="syncec-repository"
+          SERVICE_NAME="synced-api-automated"
+          VPC_CONNECTOR="my-vpc-connector"
+
+          # Build image for linux/amd64
+          docker build --platform=linux/amd64 -t ${IMAGE_NAME} .
+
+          # Tag image for Google Artifact Registry
+          docker tag ${IMAGE_NAME} ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}
+
+          # Push image to registry
+          docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy synced-api \
-            --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
-            --platform=managed \
-            --region=us-central1 \
-            --vpc-connector=my-vpc-connector \
+          IMAGE_NAME="synced-api"
+          REGION="us-central1"
+          PROJECT_ID="extreme-lodge-461611-f2"
+          REPOSITORY="syncec-repository"
+          SERVICE_NAME="synced-api-automated"
+          VPC_CONNECTOR="my-vpc-connector"
+
+          gcloud run deploy ${SERVICE_NAME} \
+            --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME} \
+            --region=${REGION} \
+            --vpc-connector=${VPC_CONNECTOR} \
             --vpc-egress=all \
             --allow-unauthenticated \
             --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }}"
-
