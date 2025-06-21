@@ -40,6 +40,6 @@ jobs:
 
       - name: Run DB Migrations
         env:
-          DATABASE_URL: postgresql://gromozeqa:${{ secrets.DATABASE_PASSWORD }}@127.0.0.1:5432/synced-dev-db
+          DATABASE_URL: postgres://${{ secrets.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@127.0.0.1:5432/${{ secrets.DATABASE_NAME }}
         run: |
-          npx prisma migrate deploy --schema src/database/prisma/schema.prisma
+          npm run prisma:migrate:apply
