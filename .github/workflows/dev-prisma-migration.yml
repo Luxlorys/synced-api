@@ -19,7 +19,9 @@ jobs:
           chmod +x cloud-sql-proxy
 
       - name: Write service account key to file
-        run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > service-account.json
+        run: |
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > tmp.json
+          cat tmp.json | jq '.' > service-account.json
 
       - name: Start Cloud SQL Auth Proxy
         run: |
