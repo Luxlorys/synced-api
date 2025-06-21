@@ -40,6 +40,8 @@ jobs:
             --image=us-central1-docker.pkg.dev/extreme-lodge-461611-f2/syncec-repository/synced-api:$GITHUB_SHA \
             --platform=managed \
             --region=us-central1 \
+            --vpc-connector=my-vpc-connector \
+            --vpc-egress=all \
             --allow-unauthenticated \
-            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},NODE_ENV=development,APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }},APPLICATION_URL=http://0.0.0.0:3001,RUNNING_PORT=8080"
+            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }},APPLICATION_SECRET=${{ secrets.APPLICATION_SECRET }}"
 
