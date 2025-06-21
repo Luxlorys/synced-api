@@ -1,4 +1,4 @@
-name: Deploy to Cloud Run
+name: Make prisma migration
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Start Cloud SQL Auth Proxy
         run: |
           ./cloud_sql_proxy \
-            -instances=${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}=tcp:5432 &
+            -instances=extreme-lodge-461611-f2:us-central1:synced=tcp:5432 &
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
